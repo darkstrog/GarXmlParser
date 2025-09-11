@@ -1,0 +1,12 @@
+C:\Users\Ergo-PC\source\repos\GarXmlParser\bin\Debug\net9.0\GarXmlParser.deps.json
+C:\Users\Ergo-PC\source\repos\GarXmlParser\bin\Debug\net9.0\GarXmlParser.dll
+C:\Users\Ergo-PC\source\repos\GarXmlParser\bin\Debug\net9.0\GarXmlParser.pdb
+C:\Users\Ergo-PC\source\repos\GarXmlParser\obj\Debug\net9.0\GarXmlParser.csproj.AssemblyReference.cache
+C:\Users\Ergo-PC\source\repos\GarXmlParser\obj\Debug\net9.0\GarXmlParser.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Ergo-PC\source\repos\GarXmlParser\obj\Debug\net9.0\GarXmlParser.AssemblyInfoInputs.cache
+C:\Users\Ergo-PC\source\repos\GarXmlParser\obj\Debug\net9.0\GarXmlParser.AssemblyInfo.cs
+C:\Users\Ergo-PC\source\repos\GarXmlParser\obj\Debug\net9.0\GarXmlParser.csproj.CoreCompileInputs.cache
+C:\Users\Ergo-PC\source\repos\GarXmlParser\obj\Debug\net9.0\GarXmlParser.dll
+C:\Users\Ergo-PC\source\repos\GarXmlParser\obj\Debug\net9.0\refint\GarXmlParser.dll
+C:\Users\Ergo-PC\source\repos\GarXmlParser\obj\Debug\net9.0\GarXmlParser.pdb
+C:\Users\Ergo-PC\source\repos\GarXmlParser\obj\Debug\net9.0\ref\GarXmlParser.dll

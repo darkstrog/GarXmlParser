@@ -1,5 +1,4 @@
-﻿using System.Xml.Serialization;
-namespace GarXmlParser.GarEntities
+﻿namespace GarXmlParser.GarEntities
 {
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]

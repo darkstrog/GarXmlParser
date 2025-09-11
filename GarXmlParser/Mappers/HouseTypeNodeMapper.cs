@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using GarXmlParser.GarEntities;
+using System.Xml.Linq;
 
 namespace GarXmlParser.Mappers
 {
@@ -6,7 +7,7 @@ namespace GarXmlParser.Mappers
     {
         public string NodeName => "HOUSETYPE";
 
-        public event Action<HOUSETYPESHOUSETYPE> OnObjectMapped;
+        public event Action<HOUSETYPESHOUSETYPE>? OnObjectMapped;
         public HOUSETYPESHOUSETYPE GetFromXelement(XElement element)
         {
             var houseType =  new HOUSETYPESHOUSETYPE()
@@ -21,7 +22,7 @@ namespace GarXmlParser.Mappers
                 ISACTIVE = bool.Parse((string)element.Attribute("ISACTIVE"))
             };
             
-            OnObjectMapped.Invoke(houseType);
+            OnObjectMapped?.Invoke(houseType);
             
             return houseType;
         }

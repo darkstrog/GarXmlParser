@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using GarXmlParser.GarEntities;
+using System.Xml.Linq;
 
 namespace GarXmlParser.Mappers
 {
@@ -6,7 +7,7 @@ namespace GarXmlParser.Mappers
     {
         public string NodeName => "ITEM";
 
-        public event Action<AddressObjectDivisionItem> OnObjectMapped;
+        public event Action<AddressObjectDivisionItem>? OnObjectMapped;
         public AddressObjectDivisionItem GetFromXelement(XElement element)
         {
             var addressObjectDivisionItem = new AddressObjectDivisionItem
@@ -17,7 +18,7 @@ namespace GarXmlParser.Mappers
                 CHANGEID = (long)element.Attribute("CHANGEID")
             };
 
-            OnObjectMapped.Invoke(addressObjectDivisionItem);
+            OnObjectMapped?.Invoke(addressObjectDivisionItem);
 
             return addressObjectDivisionItem;
         }

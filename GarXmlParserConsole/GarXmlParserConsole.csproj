@@ -11,4 +11,10 @@
     <ProjectReference Include="..\GarXmlParser\GarXmlParser.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="gar_xml.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

@@ -3,40 +3,11 @@
   "WorkspaceRootPath": "C:\\Users\\Ergo-PC\\source\\repos\\GarXmlParser\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{0345554E-AB81-4FDC-B8CD-6875DCEC39BD}|GarXmlParser.csproj|c:\\users\\ergo-pc\\source\\repos\\garxmlparser\\garentities\\housetypes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0345554E-AB81-4FDC-B8CD-6875DCEC39BD}|GarXmlParser.csproj|solutionrelative:garentities\\housetypes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0345554E-AB81-4FDC-B8CD-6875DCEC39BD}|GarXmlParser.csproj|c:\\users\\ergo-pc\\source\\repos\\garxmlparser\\garentities\\addressobjects.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0345554E-AB81-4FDC-B8CD-6875DCEC39BD}|GarXmlParser.csproj|solutionrelative:garentities\\addressobjects.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0345554E-AB81-4FDC-B8CD-6875DCEC39BD}|GarXmlParser.csproj|c:\\users\\ergo-pc\\source\\repos\\garxmlparser\\garentities\\addressobjectdivision.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0345554E-AB81-4FDC-B8CD-6875DCEC39BD}|GarXmlParser.csproj|solutionrelative:garentities\\addressobjectdivision.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0345554E-AB81-4FDC-B8CD-6875DCEC39BD}|GarXmlParser.csproj|c:\\users\\ergo-pc\\source\\repos\\garxmlparser\\mappers\\housetypenodemapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0345554E-AB81-4FDC-B8CD-6875DCEC39BD}|GarXmlParser.csproj|solutionrelative:mappers\\housetypenodemapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0345554E-AB81-4FDC-B8CD-6875DCEC39BD}|GarXmlParser.csproj|c:\\users\\ergo-pc\\source\\repos\\garxmlparser\\mappers\\addressobjectnodemapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0345554E-AB81-4FDC-B8CD-6875DCEC39BD}|GarXmlParser.csproj|solutionrelative:mappers\\addressobjectnodemapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0345554E-AB81-4FDC-B8CD-6875DCEC39BD}|GarXmlParser.csproj|c:\\users\\ergo-pc\\source\\repos\\garxmlparser\\mappers\\addressobjectdivisionnodemapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0345554E-AB81-4FDC-B8CD-6875DCEC39BD}|GarXmlParser.csproj|solutionrelative:mappers\\addressobjectdivisionnodemapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0345554E-AB81-4FDC-B8CD-6875DCEC39BD}|GarXmlParser.csproj|c:\\users\\ergo-pc\\source\\repos\\garxmlparser\\mappers\\igaritemmapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0345554E-AB81-4FDC-B8CD-6875DCEC39BD}|GarXmlParser.csproj|solutionrelative:mappers\\igaritemmapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{0345554E-AB81-4FDC-B8CD-6875DCEC39BD}|GarXmlParser.csproj|c:\\users\\ergo-pc\\source\\repos\\garxmlparser\\garnodeparser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0345554E-AB81-4FDC-B8CD-6875DCEC39BD}|GarXmlParser.csproj|solutionrelative:garnodeparser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0345554E-AB81-4FDC-B8CD-6875DCEC39BD}|GarXmlParser.csproj|c:\\users\\ergo-pc\\source\\repos\\garxmlparser\\garxmlprocessor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0345554E-AB81-4FDC-B8CD-6875DCEC39BD}|GarXmlParser.csproj|solutionrelative:garxmlprocessor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{C17852E8-5399-4071-B52F-B048BFB4808C}|..\\GarXmlParserConsole\\GarXmlParserConsole.csproj|c:\\users\\ergo-pc\\source\\repos\\garxmlparserconsole\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -51,118 +22,27 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "HouseTypes.cs",
-              "DocumentMoniker": "C:\\Users\\Ergo-PC\\source\\repos\\GarXmlParser\\GarEntities\\HouseTypes.cs",
-              "RelativeDocumentMoniker": "GarEntities\\HouseTypes.cs",
-              "ToolTip": "C:\\Users\\Ergo-PC\\source\\repos\\GarXmlParser\\GarEntities\\HouseTypes.cs",
-              "RelativeToolTip": "GarEntities\\HouseTypes.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAALYAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-19T13:40:10.259Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AddressObjects.cs",
-              "DocumentMoniker": "C:\\Users\\Ergo-PC\\source\\repos\\GarXmlParser\\GarEntities\\AddressObjects.cs",
-              "RelativeDocumentMoniker": "GarEntities\\AddressObjects.cs",
-              "ToolTip": "C:\\Users\\Ergo-PC\\source\\repos\\GarXmlParser\\GarEntities\\AddressObjects.cs",
-              "RelativeToolTip": "GarEntities\\AddressObjects.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAiAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-19T13:39:57.296Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "AddressObjectDivision.cs",
-              "DocumentMoniker": "C:\\Users\\Ergo-PC\\source\\repos\\GarXmlParser\\GarEntities\\AddressObjectDivision.cs",
-              "RelativeDocumentMoniker": "GarEntities\\AddressObjectDivision.cs",
-              "ToolTip": "C:\\Users\\Ergo-PC\\source\\repos\\GarXmlParser\\GarEntities\\AddressObjectDivision.cs",
-              "RelativeToolTip": "GarEntities\\AddressObjectDivision.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-19T13:38:48.523Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "HouseTypeNodeMapper.cs",
-              "DocumentMoniker": "C:\\Users\\Ergo-PC\\source\\repos\\GarXmlParser\\Mappers\\HouseTypeNodeMapper.cs",
-              "RelativeDocumentMoniker": "Mappers\\HouseTypeNodeMapper.cs",
-              "ToolTip": "C:\\Users\\Ergo-PC\\source\\repos\\GarXmlParser\\Mappers\\HouseTypeNodeMapper.cs",
-              "RelativeToolTip": "Mappers\\HouseTypeNodeMapper.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAeAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-19T13:36:41.793Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "AddressObjectNodeMapper.cs",
-              "DocumentMoniker": "C:\\Users\\Ergo-PC\\source\\repos\\GarXmlParser\\Mappers\\AddressObjectNodeMapper.cs",
-              "RelativeDocumentMoniker": "Mappers\\AddressObjectNodeMapper.cs",
-              "ToolTip": "C:\\Users\\Ergo-PC\\source\\repos\\GarXmlParser\\Mappers\\AddressObjectNodeMapper.cs",
-              "RelativeToolTip": "Mappers\\AddressObjectNodeMapper.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-19T13:36:16.215Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "AddressObjectDivisionNodeMapper.cs",
-              "DocumentMoniker": "C:\\Users\\Ergo-PC\\source\\repos\\GarXmlParser\\Mappers\\AddressObjectDivisionNodeMapper.cs",
-              "RelativeDocumentMoniker": "Mappers\\AddressObjectDivisionNodeMapper.cs",
-              "ToolTip": "C:\\Users\\Ergo-PC\\source\\repos\\GarXmlParser\\Mappers\\AddressObjectDivisionNodeMapper.cs",
-              "RelativeToolTip": "Mappers\\AddressObjectDivisionNodeMapper.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAeAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-19T13:35:35.194Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "IGarItemMapper.cs",
-              "DocumentMoniker": "C:\\Users\\Ergo-PC\\source\\repos\\GarXmlParser\\Mappers\\IGarItemMapper.cs",
-              "RelativeDocumentMoniker": "Mappers\\IGarItemMapper.cs",
-              "ToolTip": "C:\\Users\\Ergo-PC\\source\\repos\\GarXmlParser\\Mappers\\IGarItemMapper.cs",
-              "RelativeToolTip": "Mappers\\IGarItemMapper.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-19T13:35:53.399Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
               "Title": "GarNodeParser.cs",
               "DocumentMoniker": "C:\\Users\\Ergo-PC\\source\\repos\\GarXmlParser\\GarNodeParser.cs",
               "RelativeDocumentMoniker": "GarNodeParser.cs",
               "ToolTip": "C:\\Users\\Ergo-PC\\source\\repos\\GarXmlParser\\GarNodeParser.cs",
               "RelativeToolTip": "GarNodeParser.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAIUAAAAAAAAAAAAgwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-19T13:28:22.658Z",
+              "WhenOpened": "2025-09-11T11:14:37.148Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "GarXmlProcessor.cs",
-              "DocumentMoniker": "C:\\Users\\Ergo-PC\\source\\repos\\GarXmlParser\\GarXmlProcessor.cs",
-              "RelativeDocumentMoniker": "GarXmlProcessor.cs",
-              "ToolTip": "C:\\Users\\Ergo-PC\\source\\repos\\GarXmlParser\\GarXmlProcessor.cs",
-              "RelativeToolTip": "GarXmlProcessor.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAFAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Ergo-PC\\source\\repos\\GarXmlParserConsole\\Program.cs",
+              "RelativeDocumentMoniker": "..\\GarXmlParserConsole\\Program.cs",
+              "ToolTip": "C:\\Users\\Ergo-PC\\source\\repos\\GarXmlParserConsole\\Program.cs",
+              "RelativeToolTip": "..\\GarXmlParserConsole\\Program.cs",
+              "ViewState": "AgIAAFgAAAAAAAAAAAAgwK0AAABwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-19T13:26:39.466Z",
+              "WhenOpened": "2025-08-29T12:30:34.335Z",
               "EditorCaption": ""
             }
           ]

@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using GarXmlParser.GarEntities;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace GarXmlParser.Mappers
@@ -7,7 +8,7 @@ namespace GarXmlParser.Mappers
     {
         public string NodeName => "OBJECT";
 
-        public event Action<ADDRESSOBJECTSOBJECT> OnObjectMapped;
+        public event Action<ADDRESSOBJECTSOBJECT>? OnObjectMapped;
         public ADDRESSOBJECTSOBJECT GetFromXelement(XElement element)
         {
             var addressObject = new ADDRESSOBJECTSOBJECT()
@@ -31,7 +32,7 @@ namespace GarXmlParser.Mappers
                 TYPENAME = (string)element.Attribute("TYPENAME")
             };
 
-            OnObjectMapped.Invoke(addressObject);
+            OnObjectMapped?.Invoke(addressObject);
 
             return addressObject;
         }
