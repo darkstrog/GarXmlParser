@@ -1,5 +1,6 @@
 ﻿using GarXmlParser.GarEntities;
-using System.Xml;
+using GarXmlParser.Mappers.Helpers;
+using GarXmlParser.Mappers.Interfaces;
 using System.Xml.Linq;
 
 namespace GarXmlParser.Mappers
@@ -8,160 +9,95 @@ namespace GarXmlParser.Mappers
     {
         public string NodeName => "OBJECT";
 
-        public event Action<ADDRESSOBJECTSOBJECT>? OnObjectMapped;
-        public ADDRESSOBJECTSOBJECT GetFromXelement(XElement element)
+        public event Action<IMappedObject<ADDRESSOBJECTSOBJECT>>? OnObjectMapped;
+        public event Action<MappingError>? OnErrorMapping;
+
+#pragma warning disable CS8604, CS8600
+        public IMappedObject<ADDRESSOBJECTSOBJECT>? GetFromXelement(XElement element, string fileName, int lineNumber)
         {
-            var addressObject = new ADDRESSOBJECTSOBJECT()
+            ADDRESSOBJECTSOBJECT addressObject = new ADDRESSOBJECTSOBJECT();
+#pragma warning disable CS8604, CS8600, CS8601
+            string currentAttribute = "";
+            try
             {
-                ID = (int)element.Attribute("ID"),
-                OBJECTID = (int)element.Attribute("OBJECTID"),
-                OBJECTGUID = (string)element.Attribute("OBJECTGUID"),
-                NAME = (string)element.Attribute("NAME"),
-                CHANGEID = (long)element.Attribute("CHANGEID"),
-                UPDATEDATE = DateTime.Parse((string)element.Attribute("UPDATEDATE")),
-                ENDDATE = DateTime.Parse((string)element.Attribute("ENDDATE")),
-                ISACTIVE = (ADDRESSOBJECTSOBJECTISACTIVE)int.Parse((string)element.Attribute("ISACTIVE")),
-                ISACTUAL = (ADDRESSOBJECTSOBJECTISACTUAL)int.Parse((string)element.Attribute("ISACTUAL")),
-                LEVEL = (string)element.Attribute("LEVEL"),
-                NEXTID = (long?)element.Attribute("NEXTID") ?? 0,
-                NEXTIDSpecified = element.Attribute("NEXTID") != null,
-                PREVID = (long?)element.Attribute("PREVID") ?? 0,
-                PREVIDSpecified = (string)element.Attribute("PREVID") != null,
-                OPERTYPEID = (string)element.Attribute("OPERTYPEID"),
-                STARTDATE = DateTime.Parse((string)element.Attribute("STARTDATE")),
-                TYPENAME = (string)element.Attribute("TYPENAME")
-            };
+                currentAttribute = "ID";
+                addressObject.ID = (int)element.Attribute("ID");
 
-            OnObjectMapped?.Invoke(addressObject);
+                currentAttribute = "OBJECTID";
+                addressObject.OBJECTID = (int)element.Attribute("OBJECTID");
 
-            return addressObject;
-        }
+                currentAttribute = "OBJECTGUID";
+                addressObject.OBJECTGUID = (string)element.Attribute("OBJECTGUID");
 
-        public static ADDRESSOBJECTSOBJECT GetAddressObjectFromReader(XmlReader reader)
-        {
-            var obj = new ADDRESSOBJECTSOBJECT();
-            bool nextIdSpecified = false;
-            bool prevIdSpecified = false;
-            while (reader.MoveToNextAttribute())
-            {
-                switch (reader.Name)
+                currentAttribute = "NAME";
+                addressObject.NAME = (string)element.Attribute("NAME");
+
+                currentAttribute = "CHANGEID";
+                addressObject.CHANGEID = (long)element.Attribute("CHANGEID");
+
+                currentAttribute = "UPDATEDATE";
+                addressObject.UPDATEDATE = DateTime.Parse((string)element.Attribute("UPDATEDATE"));
+
+                currentAttribute = "ENDDATE";
+                addressObject.ENDDATE = DateTime.Parse((string)element.Attribute("ENDDATE"));
+
+                currentAttribute = "ISACTIVE";
+                addressObject.ISACTIVE = (ADDRESSOBJECTSOBJECTISACTIVE)int.Parse((string)element.Attribute("ISACTIVE"));
+
+                currentAttribute = "ISACTUAL";
+                addressObject.ISACTUAL = (ADDRESSOBJECTSOBJECTISACTUAL)int.Parse((string)element.Attribute("ISACTUAL"));
+
+                currentAttribute = "LEVEL";
+                addressObject.LEVEL = (string)element.Attribute("LEVEL");
+
+                currentAttribute = "NEXTID";
+                addressObject.NEXTID = (long?)element.Attribute("NEXTID") ?? 0;
+
+                currentAttribute = "NEXTIDSpecified";
+                addressObject.NEXTIDSpecified = element.Attribute("NEXTID") != null;
+
+                currentAttribute = "PREVID";
+                addressObject.PREVID = (long?)element.Attribute("PREVID") ?? 0;
+
+                currentAttribute = "PREVIDSpecified";
+                addressObject.PREVIDSpecified = (string)element.Attribute("PREVID") != null;
+
+                currentAttribute = "OPERTYPEID";
+                addressObject.OPERTYPEID = (string)element.Attribute("OPERTYPEID");
+
+                currentAttribute = "STARTDATE";
+                addressObject.STARTDATE = DateTime.Parse((string)element.Attribute("STARTDATE"));
+
+                currentAttribute = "TYPENAME";
+                addressObject.TYPENAME = (string)element.Attribute("TYPENAME");
+
+#pragma warning restore CS8604, CS8600, CS8601
+                var result = new MappedObject<ADDRESSOBJECTSOBJECT>
                 {
-                    case "ID":
-                        obj.ID = int.Parse(reader.Value);
-                        break;
-                    case "OBJECTID":
-                        obj.OBJECTID = int.Parse(reader.Value);
-                        break;
-                    case "OBJECTGUID":
-                        obj.OBJECTGUID = reader.Value;
-                        break;
-                    case "NAME":
-                        obj.NAME = reader.Value;
-                        break;
-                    case "CHANGEID":
-                        obj.CHANGEID = long.Parse(reader.Value);
-                        break;
-                    case "UPDATEDATE":
-                        obj.UPDATEDATE = DateTime.Parse(reader.Value);
-                        break;
-                    case "ENDDATE":
-                        obj.ENDDATE = DateTime.Parse(reader.Value);
-                        break;
-                    case "ISACTIVE":
-                        obj.ISACTIVE = (ADDRESSOBJECTSOBJECTISACTIVE)int.Parse(reader.Value);
-                        break;
-                    case "ISACTUAL":
-                        obj.ISACTUAL = (ADDRESSOBJECTSOBJECTISACTUAL)int.Parse(reader.Value);
-                        break;
-                    case "LEVEL":
-                        obj.LEVEL = reader.Value;
-                        break;
-                    case "NEXTID":
-                        obj.NEXTID = long.Parse(reader.Value);
-                        nextIdSpecified = true;
-                        break;
-                    case "PREVID":
-                        obj.PREVID = long.Parse(reader.Value);
-                        prevIdSpecified = true;
-                        break;
-                    case "OPERTYPEID":
-                        obj.OPERTYPEID = reader.Value;
-                        break;
-                    case "STARTDATE":
-                        obj.STARTDATE = DateTime.Parse(reader.Value);
-                        break;
-                    case "TYPENAME":
-                        obj.TYPENAME = reader.Value;
-                        break;
-                    default:
-                        break;
-                }
+                    Entity = addressObject,
+                    OriginalXmlElement = element.ToString(),
+                    SourceFilePath = fileName,
+                    LineNumber = lineNumber
+                };
+
+                OnObjectMapped?.Invoke(result);
+                return result;
             }
-
-            reader.MoveToElement();
-
-            obj.NEXTIDSpecified = nextIdSpecified;
-            obj.PREVIDSpecified = prevIdSpecified;
-            return obj;
-        }
-
-        private static void SetPropertyFromAttribute(string attrName, string attrValue, ADDRESSOBJECTSOBJECT obj)
-        {
-            switch (attrName)
+            catch (Exception ex)
             {
-                case "ID":
-                    obj.ID = int.Parse(attrValue);
-                    break;
-                case "OBJECTID":
-                    obj.OBJECTID = int.Parse(attrValue);
-                    break;
-                case "OBJECTGUID":
-                    obj.OBJECTGUID = attrValue;
-                    break;
-                case "NAME":
-                    obj.NAME = attrValue;
-                    break;
-                case "CHANGEID":
-                    obj.CHANGEID = long.Parse(attrValue);
-                    break;
-                case "UPDATEDATE":
-                    obj.UPDATEDATE = DateTime.Parse(attrValue);
-                    break;
-                case "ENDDATE":
-                    obj.ENDDATE = DateTime.Parse(attrValue);
-                    break;
-                case "ISACTIVE":
-                    obj.ISACTIVE = (ADDRESSOBJECTSOBJECTISACTIVE)int.Parse(attrValue);
-                    break;
-                case "ISACTUAL":
-                    obj.ISACTUAL = (ADDRESSOBJECTSOBJECTISACTUAL)int.Parse(attrValue);
-                    break;
-                case "LEVEL":
-                    obj.LEVEL = attrValue;
-                    break;
-                case "NEXTID":
-                    obj.NEXTID = long.Parse(attrValue);
-                    break;
-                case "NEXTIDSpecified":
-                    obj.NEXTIDSpecified = attrValue != null;//есть вопросики
-                    break;
-                case "PREVID":
-                    obj.PREVID = long.Parse(attrValue);//есть вопросики
-                    break;
-                case "PREVIDSpecified":
-                    obj.PREVIDSpecified = attrValue != null;//есть вопросики
-                    break;
-                case "OPERTYPEID":
-                    obj.OPERTYPEID = attrValue;
-                    break;
-                case "STARTDATE":
-                    obj.STARTDATE = DateTime.Parse(attrValue);
-                    break;
-                case "TYPENAME":
-                    obj.TYPENAME = attrValue;
-                    break;
-                default:
-                    break;
+                MappingError mappingError = new MappingError
+                {
+                    Exception = ex,
+                    OriginalXmlElement = element.ToString(),
+                    FileName = fileName,
+                    LineNumber = lineNumber,
+                    AttributeName = currentAttribute,
+                    ErrorTime = DateTime.Now
+                };
+
+                OnErrorMapping?.Invoke(mappingError);
+
+                return null;
             }
         }
     }

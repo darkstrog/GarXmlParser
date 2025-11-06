@@ -1,9 +1,6 @@
 ﻿using GarXmlParser.GarEntities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using GarXmlParser.Mappers.Helpers;
+using GarXmlParser.Mappers.Interfaces;
 using System.Xml.Linq;
 
 namespace GarXmlParser.Mappers
@@ -12,32 +9,91 @@ namespace GarXmlParser.Mappers
     {
         public string NodeName => "CARPLACE";
 
-        public event Action<CarPlace>? OnObjectMapped;
+        public event Action<IMappedObject<CarPlace>>? OnObjectMapped;
+        public event Action<MappingError>? OnErrorMapping;
 
-        public CarPlace GetFromXelement(XElement element)
+        public IMappedObject<CarPlace>? GetFromXelement(XElement element, string fileName, int lineNumber)
         {
-            var carPlace = new CarPlace()
+            CarPlace carPlace = new CarPlace();
+            string currentAttribute = "";
+
+#pragma warning disable CS8604, CS8600, CS8601
+            try
             {
-                ID = (long)element.Attribute("ID"),
-                OBJECTID = (long)element.Attribute("OBJECTID"),
-                OBJECTGUID = (string)element.Attribute("OBJECTGUID"),
-                CHANGEID = (long)element.Attribute("CHANGEID"),
-                NUMBER = (string)element.Attribute("NUMBER"),
-                OPERTYPEID = (string)element.Attribute("OPERTYPEID"),
-                PREVID = (long?)element.Attribute("PREVID") ?? 0,
-                PREVIDSpecified = (string)element.Attribute("PREVID") != null,
-                NEXTID = (long?)element.Attribute("NEXTID") ?? 0,
-                NEXTIDSpecified = element.Attribute("NEXTID") != null,
-                UPDATEDATE = DateTime.Parse((string)element.Attribute("UPDATEDATE")),
-                STARTDATE = DateTime.Parse((string)element.Attribute("STARTDATE")),
-                ENDDATE = DateTime.Parse((string)element.Attribute("ENDDATE")),
-                ISACTIVE = (CARPLACESCARPLACEISACTIVE)int.Parse((string)element.Attribute("ISACTIVE")),
-                ISACTUAL = (CARPLACESCARPLACEISACTUAL)int.Parse((string)element.Attribute("ISACTUAL"))
-            };
+                currentAttribute = "ID";
+                carPlace.ID = (long)element.Attribute("ID");
 
-            OnObjectMapped?.Invoke(carPlace);
+                currentAttribute = "OBJECTID";
+                carPlace.OBJECTID = (long)element.Attribute("OBJECTID");
 
-            return carPlace;
+                currentAttribute = "OBJECTGUID";
+                carPlace.OBJECTGUID = (string)element.Attribute("OBJECTGUID");
+
+                currentAttribute = "CHANGEID";
+                carPlace.CHANGEID = (long)element.Attribute("CHANGEID");
+
+                currentAttribute = "NUMBER";
+                carPlace.NUMBER = (string)element.Attribute("NUMBER");
+
+                currentAttribute = "OPERTYPEID";
+                carPlace.OPERTYPEID = (string)element.Attribute("OPERTYPEID");
+
+                currentAttribute = "PREVID";
+                carPlace.PREVID = (long?)element.Attribute("PREVID") ?? 0;
+
+                currentAttribute = "PREVIDSpecified";
+                carPlace.PREVIDSpecified = (string)element.Attribute("PREVID") != null;
+
+                currentAttribute = "NEXTID";
+                carPlace.NEXTID = (long?)element.Attribute("NEXTID") ?? 0;
+
+                currentAttribute = "NEXTIDSpecified";
+                carPlace.NEXTIDSpecified = element.Attribute("NEXTID") != null;
+
+                currentAttribute = "UPDATEDATE";
+                carPlace.UPDATEDATE = DateTime.Parse((string)element.Attribute("UPDATEDATE"));
+
+                currentAttribute = "STARTDATE";
+                carPlace.STARTDATE = DateTime.Parse((string)element.Attribute("STARTDATE"));
+
+                currentAttribute = "ENDDATE";
+                carPlace.ENDDATE = DateTime.Parse((string)element.Attribute("ENDDATE"));
+
+                currentAttribute = "ISACTIVE";
+                carPlace.ISACTIVE = (CARPLACESCARPLACEISACTIVE)int.Parse((string)element.Attribute("ISACTIVE"));
+
+                currentAttribute = "ISACTUAL";
+                carPlace.ISACTUAL = (CARPLACESCARPLACEISACTUAL)int.Parse((string)element.Attribute("ISACTUAL"));
+
+#pragma warning restore CS8604, CS8600, CS8601
+                var result = new MappedObject<CarPlace>
+                {
+                    Entity = carPlace,
+                    OriginalXmlElement = element.ToString(),
+                    SourceFilePath = fileName,
+                    LineNumber = lineNumber
+                };
+
+                OnObjectMapped?.Invoke(result);
+
+                return result;
+            }
+            catch(Exception ex)
+            {
+                MappingError mappingError = new MappingError
+                {
+                    Exception = ex,
+                    OriginalXmlElement = element.ToString(),
+                    FileName = fileName,
+                    LineNumber = lineNumber,
+                    AttributeName = currentAttribute,
+                    ErrorTime = DateTime.Now
+                };
+
+                OnErrorMapping?.Invoke(mappingError);
+
+                return null;
+            }
         }
     }
 }

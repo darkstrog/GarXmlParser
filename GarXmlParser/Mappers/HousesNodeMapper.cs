@@ -1,4 +1,6 @@
 ﻿using GarXmlParser.GarEntities;
+using GarXmlParser.Mappers.Helpers;
+using GarXmlParser.Mappers.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,37 +14,105 @@ namespace GarXmlParser.Mappers
     {
         public string NodeName => "HOUSE";
 
-        public event Action<HOUSESHOUSE>? OnObjectMapped;
+        public event Action<IMappedObject<HOUSESHOUSE>>? OnObjectMapped;
+        public event Action<MappingError>? OnErrorMapping;
 
-        public HOUSESHOUSE GetFromXelement(XElement element)
+        public IMappedObject<HOUSESHOUSE>? GetFromXelement(XElement element, string fileName, int lineNumber)
         {
-            var house = new HOUSESHOUSE()
+            HOUSESHOUSE house = new HOUSESHOUSE();
+            string currentAttribute = "";
+#pragma warning disable CS8604, CS8600, CS8601
+            try
             {
-                ID = (long)element.Attribute("ID"),
-                OBJECTID = (long)element.Attribute("OBJECTID"),
-                OBJECTGUID = (string)element.Attribute("OBJECTGUID"),
-                CHANGEID = (long)element.Attribute("CHANGEID"),
-                HOUSENUM = (string)element.Attribute("HOUSENUM"),
-                ADDNUM1 = (string)element.Attribute("ADDNUM1"),
-                ADDNUM2 = (string)element.Attribute("ADDNUM2"),
-                HOUSETYPE = (string)element.Attribute("HOUSETYPE"),
-                ADDTYPE1 = (string)element.Attribute("ADDTYPE1"),
-                ADDTYPE2 = (string)element.Attribute("ADDTYPE2"),
-                OPERTYPEID = (string)element.Attribute("OPERTYPEID"),
-                PREVID = (long?)element.Attribute("PREVID") ?? 0,
-                PREVIDSpecified = (string)element.Attribute("PREVID") != null,
-                NEXTID = (long?)element.Attribute("NEXTID") ?? 0,
-                NEXTIDSpecified = element.Attribute("NEXTID") != null,
-                UPDATEDATE = DateTime.Parse((string)element.Attribute("UPDATEDATE")),
-                STARTDATE = DateTime.Parse((string)element.Attribute("STARTDATE")),
-                ENDDATE = DateTime.Parse((string)element.Attribute("ENDDATE")),
-                ISACTIVE = (HOUSESHOUSEISACTIVE)int.Parse((string)element.Attribute("ISACTIVE")),
-                ISACTUAL = (HOUSESHOUSEISACTUAL)int.Parse((string)element.Attribute("ISACTUAL"))
-            };
+                currentAttribute = "ID";
+                house.ID = (long)element.Attribute("ID");
 
-            OnObjectMapped?.Invoke(house);
+                currentAttribute = "OBJECTID";
+                house.OBJECTID = (long)element.Attribute("OBJECTID");
 
-            return house;
+                currentAttribute = "OBJECTGUID";
+                house.OBJECTGUID = (string)element.Attribute("OBJECTGUID");
+
+                currentAttribute = "CHANGEID";
+                house.CHANGEID = (long)element.Attribute("CHANGEID");
+
+                currentAttribute = "HOUSENUM";
+                house.HOUSENUM = (string)element.Attribute("HOUSENUM");
+
+                currentAttribute = "ADDNUM1";
+                house.ADDNUM1 = (string)element.Attribute("ADDNUM1");
+
+                currentAttribute = "ADDNUM2";
+                house.ADDNUM2 = (string)element.Attribute("ADDNUM2");
+
+                currentAttribute = "HOUSETYPE";
+                house.HOUSETYPE = (string)element.Attribute("HOUSETYPE");
+
+                currentAttribute = "ADDTYPE1";
+                house.ADDTYPE1 = (string)element.Attribute("ADDTYPE1");
+
+                currentAttribute = "ADDTYPE2";
+                house.ADDTYPE2 = (string)element.Attribute("ADDTYPE2");
+
+                currentAttribute = "OPERTYPEID";
+                house.OPERTYPEID = (string)element.Attribute("OPERTYPEID");
+
+                currentAttribute = "PREVID";
+                house.PREVID = (long?)element.Attribute("PREVID") ?? 0;
+
+                currentAttribute = "PREVIDSpecified";
+                house.PREVIDSpecified = (string)element.Attribute("PREVID") != null;
+
+                currentAttribute = "NEXTID";
+                house.NEXTID = (long?)element.Attribute("NEXTID") ?? 0;
+
+                currentAttribute = "NEXTIDSpecified";
+                house.NEXTIDSpecified = element.Attribute("NEXTID") != null;
+
+                currentAttribute = "UPDATEDATE";
+                house.UPDATEDATE = DateTime.Parse((string)element.Attribute("UPDATEDATE"));
+
+                currentAttribute = "STARTDATE";
+                house.STARTDATE = DateTime.Parse((string)element.Attribute("STARTDATE"));
+
+                currentAttribute = "ENDDATE";
+                house.ENDDATE = DateTime.Parse((string)element.Attribute("ENDDATE"));
+
+                currentAttribute = "ISACTIVE";
+                house.ISACTIVE = (HOUSESHOUSEISACTIVE)int.Parse((string)element.Attribute("ISACTIVE"));
+
+                currentAttribute = "ISACTUAL";
+                house.ISACTUAL = (HOUSESHOUSEISACTUAL)int.Parse((string)element.Attribute("ISACTUAL"));
+
+#pragma warning restore CS8604, CS8600, CS8601
+                var result = new MappedObject<HOUSESHOUSE>
+                {
+                    Entity = house,
+                    OriginalXmlElement = element.ToString(),
+                    SourceFilePath = fileName,
+                    LineNumber = lineNumber
+                };
+
+                OnObjectMapped?.Invoke(result);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                MappingError mappingError = new MappingError
+                {
+                    Exception = ex,
+                    OriginalXmlElement = element.ToString(),
+                    FileName = fileName,
+                    LineNumber = lineNumber,
+                    AttributeName = currentAttribute,
+                    ErrorTime = DateTime.Now
+                };
+
+                OnErrorMapping?.Invoke(mappingError);
+
+                return null;
+            }
         }
     }
 }

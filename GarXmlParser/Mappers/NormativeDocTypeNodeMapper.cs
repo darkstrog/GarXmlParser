@@ -1,4 +1,6 @@
 ﻿using GarXmlParser.GarEntities;
+using GarXmlParser.Mappers.Helpers;
+using GarXmlParser.Mappers.Interfaces;
 using System.Xml.Linq;
 
 namespace GarXmlParser.Mappers
@@ -7,21 +9,56 @@ namespace GarXmlParser.Mappers
     {
         public string NodeName => "NDOCTYPE";
 
-        public event Action<NormativeDocType>? OnObjectMapped;
+        public event Action<IMappedObject<NormativeDocType>>? OnObjectMapped;
+        public event Action<MappingError>? OnErrorMapping;
 
-        public NormativeDocType GetFromXelement(XElement element)
+        public IMappedObject<NormativeDocType>? GetFromXelement(XElement element, string fileName, int lineNumber)
         {
-            var normDocType = new NormativeDocType()
+            NormativeDocType normDocType = new NormativeDocType();
+            string currentAttribute = "";
+#pragma warning disable CS8604, CS8600, CS8601
+            try
             {
-                ID = (string)element.Attribute("ID"),
-                NAME = (string)element.Attribute("NAME"),
-                STARTDATE = DateTime.Parse((string)element.Attribute("STARTDATE")),
-                ENDDATE = DateTime.Parse((string)element.Attribute("ENDDATE"))
-            };
+                currentAttribute = "";
+                normDocType.ID = (string)element.Attribute("ID");
 
-            OnObjectMapped?.Invoke(normDocType);
+                currentAttribute = "";
+                normDocType.NAME = (string)element.Attribute("NAME");
 
-            return normDocType;
+                currentAttribute = "";
+                normDocType.STARTDATE = DateTime.Parse((string)element.Attribute("STARTDATE"));
+
+                currentAttribute = "";
+                normDocType.ENDDATE = DateTime.Parse((string)element.Attribute("ENDDATE"));
+
+#pragma warning restore CS8604, CS8600, CS8601
+                MappedObject<NormativeDocType> result = new MappedObject<NormativeDocType>
+                {
+                    Entity = normDocType,
+                    OriginalXmlElement = element.ToString(),
+                    SourceFilePath = fileName,
+                    LineNumber = lineNumber
+                };
+                OnObjectMapped?.Invoke(result);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                MappingError mappingError = new MappingError
+                {
+                    Exception = ex,
+                    OriginalXmlElement = element.ToString(),
+                    FileName = fileName,
+                    LineNumber = lineNumber,
+                    AttributeName = currentAttribute,
+                    ErrorTime = DateTime.Now
+                };
+
+                OnErrorMapping?.Invoke(mappingError);
+
+                return null;
+            }
         }
     }
 }

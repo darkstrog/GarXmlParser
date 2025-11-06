@@ -1,0 +1,21 @@
+## .NET Build Output ##
+bin/
+obj/
+
+## IDE ##
+.vs/
+*.user
+*.suo
+*.cache
+
+## Build Results ##
+[Dd]ebug/
+[Rr]elease/
+*.exe
+*.dll
+*.pdb
+*.xml
+
+## NuGet ##
+.nuget/
+*.nupkg

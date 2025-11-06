@@ -1,9 +1,6 @@
 ﻿using GarXmlParser.GarEntities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using GarXmlParser.Mappers.Helpers;
+using GarXmlParser.Mappers.Interfaces;
 using System.Xml.Linq;
 
 namespace GarXmlParser.Mappers
@@ -12,24 +9,64 @@ namespace GarXmlParser.Mappers
     {
         public string NodeName => "OBJECTLEVEL";
 
-        public event Action<ObjectLevel>? OnObjectMapped;
-
-        public ObjectLevel GetFromXelement(XElement element)
+        public event Action<IMappedObject<ObjectLevel>>? OnObjectMapped;
+        public event Action<MappingError>? OnErrorMapping;
+        public IMappedObject<ObjectLevel>? GetFromXelement(XElement element, string fileName, int lineNumber)
         {
-            var objectLevel = new ObjectLevel()
+            ObjectLevel objectLevel = new ObjectLevel();
+            string currentAttribute = "";
+#pragma warning disable CS8604, CS8600, CS8601
+            try
             {
-                LEVEL = (string)element.Attribute("LEVEL"),
-                NAME = (string)element.Attribute("NAME"),
-                SHORTNAME = (string)element.Attribute("SHORTNAME"),
-                STARTDATE = DateTime.Parse((string)element.Attribute("STARTDATE")),
-                UPDATEDATE = DateTime.Parse((string)element.Attribute("UPDATEDATE")),
-                ENDDATE = DateTime.Parse((string)element.Attribute("ENDDATE")),
-                ISACTIVE = (bool)element.Attribute("ISACTIVE")
-            };
+                currentAttribute = "LEVEL";
+                objectLevel.LEVEL = (string)element.Attribute("LEVEL");
 
-            OnObjectMapped?.Invoke(objectLevel);
+                currentAttribute = "NAME";
+                objectLevel.NAME = (string)element.Attribute("NAME");
 
-            return objectLevel;
+                currentAttribute = "SHORTNAME";
+                objectLevel.SHORTNAME = (string)element.Attribute("SHORTNAME");
+
+                currentAttribute = "STARTDATE";
+                objectLevel.STARTDATE = DateTime.Parse((string)element.Attribute("STARTDATE"));
+
+                currentAttribute = "UPDATEDATE";
+                objectLevel.UPDATEDATE = DateTime.Parse((string)element.Attribute("UPDATEDATE"));
+
+                currentAttribute = "ENDDATE";
+                objectLevel.ENDDATE = DateTime.Parse((string)element.Attribute("ENDDATE"));
+
+                currentAttribute = "ISACTIVE";
+                objectLevel.ISACTIVE = (bool)element.Attribute("ISACTIVE");
+
+#pragma warning restore CS8604, CS8600, CS8601
+                MappedObject<ObjectLevel> result = new MappedObject<ObjectLevel>
+                {
+                    Entity = objectLevel,
+                    OriginalXmlElement = element.ToString(),
+                    SourceFilePath = fileName,
+                    LineNumber = lineNumber
+                };
+                OnObjectMapped?.Invoke(result);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                MappingError mappingError = new MappingError
+                {
+                    Exception = ex,
+                    OriginalXmlElement = element.ToString(),
+                    FileName = fileName,
+                    LineNumber = lineNumber,
+                    AttributeName = currentAttribute,
+                    ErrorTime = DateTime.Now
+                };
+
+                OnErrorMapping?.Invoke(mappingError);
+
+                return null;
+            }
         }
     }
 }

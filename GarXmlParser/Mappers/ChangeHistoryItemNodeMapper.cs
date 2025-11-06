@@ -1,4 +1,6 @@
 ﻿using GarXmlParser.GarEntities;
+using GarXmlParser.Mappers.Helpers;
+using GarXmlParser.Mappers.Interfaces;
 using System.Xml.Linq;
 
 namespace GarXmlParser.Mappers
@@ -7,31 +9,64 @@ namespace GarXmlParser.Mappers
     {
         public string NodeName => "ITEM";
 
-        public event Action<ChangeHistoryItem>? OnObjectMapped;
-
-        public ChangeHistoryItem GetFromXelement(XElement element)
+        public event Action<IMappedObject<ChangeHistoryItem>>? OnObjectMapped;
+        public event Action<MappingError>? OnErrorMapping;
+        public IMappedObject<ChangeHistoryItem>? GetFromXelement(XElement element, string fileName, int lineNumber)
         {
-
+            ChangeHistoryItem changeHistoryItem = new ChangeHistoryItem();
+            string currentAttribute = "";
+#pragma warning disable CS8604, CS8600, CS8601
             try
             {
-                var changeHistoryItem = new ChangeHistoryItem()
-                {
-                    CHANGEID = (long)element.Attribute("CHANGEID"),
-                    OBJECTID = (long)element.Attribute("OBJECTID"),
-                    ADROBJECTID = (string)element.Attribute("ADROBJECTID"),
-                    OPERTYPEID = (string)element.Attribute("OPERTYPEID"),
-                    NDOCID = (long?)element.Attribute("NDOCID") ?? 0,
-                    NDOCIDSpecified = element.Attribute("NDOCID") != null,
-                    CHANGEDATE = DateTime.Parse((string)element.Attribute("CHANGEDATE")),
-                };
-            OnObjectMapped?.Invoke(changeHistoryItem);
+                currentAttribute = "CHANGEID";
+                changeHistoryItem.CHANGEID = (long)element.Attribute("CHANGEID");
+                
+                currentAttribute = "OBJECTID";
+                changeHistoryItem.OBJECTID = (long)element.Attribute("OBJECTID");
+                
+                currentAttribute = "ADROBJECTID";
+                changeHistoryItem.ADROBJECTID = (string)element.Attribute("ADROBJECTID");
 
-            return changeHistoryItem;
+                currentAttribute = "OPERTYPEID";
+                changeHistoryItem.OPERTYPEID = (string)element.Attribute("OPERTYPEID");
+
+                currentAttribute = "NDOCID";
+                changeHistoryItem.NDOCID = (long?)element.Attribute("NDOCID") ?? 0;
+
+                currentAttribute = "NDOCIDSpecified";
+                changeHistoryItem.NDOCIDSpecified = element.Attribute("NDOCID") != null;
+
+                currentAttribute = "CHANGEDATE";
+                changeHistoryItem.CHANGEDATE = DateTime.Parse((string)element.Attribute("CHANGEDATE"));
+
+#pragma warning restore CS8604, CS8600, CS8601
+                var result = new MappedObject<ChangeHistoryItem>
+                {
+                    Entity = changeHistoryItem,
+                    OriginalXmlElement = element.ToString(),
+                    SourceFilePath = fileName,
+                    LineNumber = lineNumber
+                };
+
+                OnObjectMapped?.Invoke(result);
+
+                return result;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Console.WriteLine($"{element.Attribute("CHANGEID")}--{element.Attribute("OBJECTID")}--{element.Attribute("ADROBJECTID")}--{element.Attribute("OPERTYPEID")}--{element.Attribute("NDOCID")}--{element.Attribute("CHANGEDATE")}");
-                throw;
+                MappingError mappingError = new MappingError
+                {
+                    Exception = ex,
+                    OriginalXmlElement = element.ToString(),
+                    FileName = fileName,
+                    LineNumber = lineNumber,
+                    AttributeName = currentAttribute,
+                    ErrorTime = DateTime.Now
+                };
+
+                OnErrorMapping?.Invoke(mappingError);
+
+                return null;
             }
             
 

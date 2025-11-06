@@ -1,4 +1,4 @@
-﻿using GarXmlParser.Mappers;
+﻿using GarXmlParser.Mappers.Interfaces;
 using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
 using System.Xml;
@@ -6,11 +6,15 @@ using System.Xml.Linq;
 
 namespace GarXmlParser
 {
+    /// <summary>
+    /// Парсер пропускает ноду если маппер не смог ее обработать,
+    /// обработка ошибки возложена на маппер
+    /// </summary>
     internal class GarNodeParser
     {
-    private readonly ILogger _logger;
+    private readonly ILogger? _logger;
 
-    public GarNodeParser(ILogger<GarNodeParser> logger = null)
+    public GarNodeParser(ILogger<GarNodeParser>? logger = null)
     {
         _logger = logger;
     }
@@ -24,10 +28,11 @@ namespace GarXmlParser
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Если маппер или путь оказался null</exception>
         /// <exception cref="OperationCanceledException">Вызывается при отмене операции</exception>
-        public async IAsyncEnumerable<T> GetXmlObjectFromFileAsync<T>(
+        public async IAsyncEnumerable<IMappedObject<T>> GetXmlObjectFromFileAsync<T>(
             string filePath,
             IGarItemMapper<T> mapper,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
+             where T : class
         {
             if (string.IsNullOrEmpty(filePath)) { throw new ArgumentNullException(filePath); }
             ArgumentNullException.ThrowIfNull(mapper);
@@ -41,7 +46,7 @@ namespace GarXmlParser
 
             using (var reader = XmlReader.Create(filePath, settings))
             {
-                _logger?.LogInformation($"Начинается обработка: {filePath}");
+                _logger?.LogInformation($"Начинается чтение: {filePath}");
                 while (await reader.ReadAsync().ConfigureAwait(false))
                 {
                     cancellationToken.ThrowIfCancellationRequested();
@@ -51,17 +56,20 @@ namespace GarXmlParser
                         using (var subtree = reader.ReadSubtree())
                         {
                             await subtree.ReadAsync().ConfigureAwait(false);
+                            var lineNumber = ((IXmlLineInfo)reader).LineNumber;
                             var element = await XElement.LoadAsync(subtree, LoadOptions.None, cancellationToken).ConfigureAwait(false);
                             if (element != null)
                             {
-                                var item = mapper.GetFromXelement(element);
-                                yield return item;
+                                var item = mapper.GetFromXelement(element, filePath, lineNumber);
+                                if (item != null) yield return item;
                             }
                         }
                     }
                 }
             }
         }
+
+
         /// <summary>
         /// Получает объекты из XML асинхронно потоковым чтением по одному объекту из строки
         /// </summary>
@@ -73,13 +81,13 @@ namespace GarXmlParser
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Если маппер или путь оказался null</exception>
         /// <exception cref="OperationCanceledException">Вызывается при отмене операции</exception>
-        public async IAsyncEnumerable<T> GetXmlObjectFromXMLContentAsync<T>
+        public async IAsyncEnumerable<IMappedObject<T>> GetXmlObjectFromXMLContentAsync<T>
             (
                 string xmlContent,
                 IGarItemMapper<T> mapper,
                 string fileName = "XML содержимое",
                 [EnumeratorCancellation] CancellationToken cancellationToken = default
-            )
+            ) where T : class
         {
             if (string.IsNullOrEmpty(xmlContent)) { throw new ArgumentNullException(xmlContent); }
             ArgumentNullException.ThrowIfNull(mapper);
@@ -95,7 +103,7 @@ namespace GarXmlParser
             {
                 using (var reader = XmlReader.Create(xmlString, settings))
                 {
-                    _logger?.LogInformation($"Начинается обработка: {fileName}");
+                    _logger?.LogInformation($"Начинается чтение: {fileName}");
                     while (await reader.ReadAsync().ConfigureAwait(false))
                     {
                         cancellationToken.ThrowIfCancellationRequested();
@@ -105,11 +113,12 @@ namespace GarXmlParser
                             using (var subtree = reader.ReadSubtree())
                             {
                                 await subtree.ReadAsync().ConfigureAwait(false);
+                                var lineNumber = ((IXmlLineInfo)reader).LineNumber;
                                 var element = await XElement.LoadAsync(subtree, LoadOptions.None, cancellationToken).ConfigureAwait(false);
                                 if (element != null)
                                 {
-                                    var item = mapper.GetFromXelement(element);
-                                    yield return item;
+                                    var item = mapper.GetFromXelement(element, fileName, lineNumber);
+                                    if (item != null) yield return item;
                                 }
                             }
                         }
@@ -117,6 +126,9 @@ namespace GarXmlParser
                 }
             }
         }
+
+
+
         /// <summary>
         /// Обрабатывает XML из полученного стрима
         /// </summary>
@@ -127,11 +139,11 @@ namespace GarXmlParser
         /// <param name="cancellationToken">Токен отмены операции</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public async IAsyncEnumerable<T> GetXmlObjectFromStreamAsync<T>(
+        public async IAsyncEnumerable<IMappedObject<T>> GetXmlObjectFromStreamAsync<T>(
            Stream stream,
            IGarItemMapper<T> mapper,
            string fileName="Содержимое потока",
-           [EnumeratorCancellation] CancellationToken cancellationToken = default)
+           [EnumeratorCancellation] CancellationToken cancellationToken = default) where T : class
         {
             if (stream is null) { throw new ArgumentNullException("stream"); }
             ArgumentNullException.ThrowIfNull(mapper);
@@ -145,8 +157,7 @@ namespace GarXmlParser
 
             using (var reader = XmlReader.Create(stream, settings))
             {
-                Console.WriteLine($"Начинается обработка: {fileName}");
-                _logger?.LogInformation($"Начинается обработка: {fileName}");
+                _logger?.LogInformation($"Начинается чтение: {fileName}");
                 while (await reader.ReadAsync().ConfigureAwait(false))
                 {
                     cancellationToken.ThrowIfCancellationRequested();
@@ -156,11 +167,12 @@ namespace GarXmlParser
                         using (var subtree = reader.ReadSubtree())
                         {
                             await subtree.ReadAsync().ConfigureAwait(false);
+                            var lineNumber = ((IXmlLineInfo)reader).LineNumber;
                             var element = await XElement.LoadAsync(subtree, LoadOptions.None, cancellationToken).ConfigureAwait(false);
                             if (element != null)
                             {
-                                var item = mapper.GetFromXelement(element);
-                                yield return item;
+                                var item = mapper.GetFromXelement(element, fileName, lineNumber);
+                                if (item != null) yield return item;
                             }
                         }
                     }

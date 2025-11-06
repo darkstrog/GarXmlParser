@@ -1,9 +1,6 @@
 ﻿using GarXmlParser.GarEntities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using GarXmlParser.Mappers.Helpers;
+using GarXmlParser.Mappers.Interfaces;
 using System.Xml.Linq;
 
 namespace GarXmlParser.Mappers
@@ -11,25 +8,68 @@ namespace GarXmlParser.Mappers
     public class OperationTypeNodeMapper : IGarItemMapper<OperationType>
     {
         public string NodeName => "OPERATIONTYPE";
-        public event Action<OperationType>? OnObjectMapped;
-
-        public OperationType GetFromXelement(XElement element)
+        public event Action<IMappedObject<OperationType>>? OnObjectMapped;
+        public event Action<MappingError>? OnErrorMapping;
+        public IMappedObject<OperationType>? GetFromXelement(XElement element, string fileName, int lineNumber)
         {
-            var operationType = new OperationType()
+            OperationType operationType = new OperationType();
+            string currentAttribute = "";
+#pragma warning disable CS8604, CS8600, CS8601
+            try
             {
-                ID = (string)element.Attribute("ID"),
-                NAME = (string)element.Attribute("NAME"),
-                SHORTNAME = (string)element.Attribute("SHORTNAME"),
-                DESC = (string)element.Attribute("DESC"),
-                STARTDATE = DateTime.Parse((string)element.Attribute("STARTDATE")),
-                UPDATEDATE = DateTime.Parse((string)element.Attribute("UPDATEDATE")),
-                ENDDATE = DateTime.Parse((string)element.Attribute("STARTDATE")),
-                ISACTIVE = (bool)element.Attribute("ISACTIVE")
-            };
+                currentAttribute = "ID";
+                operationType.ID = (string)element.Attribute("ID");
 
-            OnObjectMapped?.Invoke(operationType);
+                currentAttribute = "NAME";
+                operationType.NAME = (string)element.Attribute("NAME");
 
-            return operationType;
+                currentAttribute = "SHORTNAME";
+                operationType.SHORTNAME = (string)element.Attribute("SHORTNAME");
+
+                currentAttribute = "DESC";
+                operationType.DESC = (string)element.Attribute("DESC");
+
+                currentAttribute = "STARTDATE";
+                operationType.STARTDATE = DateTime.Parse((string)element.Attribute("STARTDATE"));
+
+                currentAttribute = "UPDATEDATE";
+                operationType.UPDATEDATE = DateTime.Parse((string)element.Attribute("UPDATEDATE"));
+
+                currentAttribute = "ENDDATE";
+                operationType.ENDDATE = DateTime.Parse((string)element.Attribute("STARTDATE"));
+
+                currentAttribute = "ISACTIVE";
+                operationType.ISACTIVE = (bool)element.Attribute("ISACTIVE");
+
+#pragma warning restore CS8604, CS8600, CS8601
+                MappedObject<OperationType> result = new MappedObject<OperationType>
+                {
+                    Entity = operationType,
+                    OriginalXmlElement = element.ToString(),
+                    SourceFilePath = fileName,
+                    LineNumber = lineNumber
+                };
+
+                OnObjectMapped?.Invoke(result);
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+                MappingError mappingError = new MappingError
+                {
+                    Exception = ex,
+                    OriginalXmlElement = element.ToString(),
+                    FileName = fileName,
+                    LineNumber = lineNumber,
+                    AttributeName = currentAttribute,
+                    ErrorTime = DateTime.Now
+                };
+
+                OnErrorMapping?.Invoke(mappingError);
+
+                return null;
+            }
         }
     }
 }

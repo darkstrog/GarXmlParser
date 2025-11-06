@@ -1,4 +1,4 @@
-﻿using GarXmlParser.Mappers;
+﻿using GarXmlParser.Mappers.Interfaces;
 using Microsoft.Extensions.Logging;
 using System.IO.Compression;
 using System.Runtime.CompilerServices;
@@ -9,9 +9,9 @@ namespace GarXmlParser
     public class GarXmlProcessor
     {
         private readonly GarNodeParser _parser;
-        private readonly ILogger _logger;
+        private readonly ILogger? _logger;
 
-        public GarXmlProcessor(ILogger<GarXmlProcessor> logger = null)
+        public GarXmlProcessor(ILogger<GarXmlProcessor>? logger = null)
         {
             _parser = new GarNodeParser();
             _logger = logger;
@@ -53,20 +53,26 @@ namespace GarXmlParser
         public async Task<int> ProcessFilesAsync<T>(
             IEnumerable<string> filePaths,
             IGarItemMapper<T> mapper,
-            Func<T, Task> itemProcessor,
+            Func<IMappedObject<T>, Task> itemProcessor,
             CancellationToken cancellationToken = default,
-            IProgress<ProcessingProgress>? progress = null)
+            IProgress<ProcessingProgress>? progress = null) where T : class
         {
-            var files = filePaths.ToList();
-            int filesCount = files.Count;
-            int totalCount = 0;
-            int fileIndex = 0;
+            var _files = filePaths.ToList();
+            int _filesCount = _files.Count;
+            int _totalCount = 0;
+            int _fileIndex = 0;
+            int _errorCount = 0;
 
-
-            foreach (var file in files)
+            mapper.OnErrorMapping += error =>
             {
-                fileIndex++;
-                progress?.Report(new ProcessingProgress(fileIndex, filesCount, file, totalCount));
+                _errorCount++;
+                _logger?.LogDebug("Ошибка парсинга: {File}:{Line} - {Message}",
+                    error.FileName, error.LineNumber, error.Exception.Message);
+            };
+
+            foreach (var file in _files)
+            {
+                _fileIndex++;
                 cancellationToken.ThrowIfCancellationRequested();
 
                 try
@@ -74,8 +80,11 @@ namespace GarXmlParser
                     await foreach (var item in _parser.GetXmlObjectFromFileAsync(file, mapper, cancellationToken))
                     {
                         await itemProcessor(item);
-                        totalCount++;
-                        progress?.Report(new ProcessingProgress(fileIndex, filesCount, file, totalCount));
+                        _totalCount++;
+                        if (_totalCount % 100 == 0)
+                        {
+                            progress?.Report(new ProcessingProgress(_fileIndex, _filesCount, file, _totalCount, _errorCount));
+                        }
                     }
                 }
                 catch (Exception ex) when (ex is not OperationCanceledException)
@@ -89,8 +98,14 @@ namespace GarXmlParser
                     throw;
                 }
             }
+            
+            if (_errorCount > 0)
+            {
+                _logger?.LogInformation("Обработан файлов {File}: {Success} успешно, {Errors} ошибок",
+                    _fileIndex, _totalCount, _errorCount);
+            }
 
-            return totalCount;
+            return _totalCount;
         }
 
         /// <summary>
@@ -105,22 +120,41 @@ namespace GarXmlParser
         /// <returns></returns>
         /// /// <exception cref="ArgumentNullException">Если маппер или путь оказался null</exception>
         /// <exception cref="OperationCanceledException">Вызывается при отмене операции</exception>
-        public async IAsyncEnumerable<T> StreamFilesAsync<T>(
+        public async IAsyncEnumerable<IMappedObject<T>> StreamFilesAsync<T>(
             IEnumerable<string> filePaths,
             IGarItemMapper<T> mapper,
             [EnumeratorCancellation] CancellationToken cancellationToken = default,
-            IProgress<ProcessingProgress>? progress = null)
+            IProgress<ProcessingProgress>? progress = null) where T : class
         {
-            int totalCount = 0;
-            int fileIndex = 0;
+            int _totalCount = 0;
+            int _fileIndex = 0;
+            int _errorCount = 0;
+
+            mapper.OnErrorMapping += error =>
+            {
+                _errorCount++;
+                _logger?.LogDebug("Ошибка парсинга: {File}:{Line} - {Message}",
+                    error.FileName, error.LineNumber, error.Exception.Message);
+            };
+
             foreach (var filePath in filePaths)
             {
-                fileIndex++;
+                _fileIndex++;
                 await foreach (var item in _parser.GetXmlObjectFromFileAsync(filePath, mapper, cancellationToken))
                 {
-                    totalCount++;
+                    _totalCount++;
+                    if (_totalCount % 100 == 0)
+                    {
+                        progress?.Report(new ProcessingProgress(_fileIndex, _fileIndex, filePath, _totalCount, _errorCount));
+                    }
                     yield return item;
                 }
+            }
+
+            if (_errorCount > 0)
+            {
+                _logger?.LogInformation("Обработан файлов {File}: {Success} успешно, {Errors} ошибок",
+                    _fileIndex, _totalCount, _errorCount);
             }
         }
 
@@ -136,12 +170,12 @@ namespace GarXmlParser
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Если маппер или путь оказался null</exception>
         /// <exception cref="OperationCanceledException">Вызывается при отмене операции</exception>
-        public async Task<List<T>> GetListAsync<T>(
+        public async Task<List<IMappedObject<T>>> GetListAsync<T>(
             IEnumerable<string> filePaths,
             IGarItemMapper<T> mapper,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default) where T : class
         {
-            var results = new List<T>();
+            var results = new List<IMappedObject<T>>();
             try
             {
                 await foreach (var item in StreamFilesAsync(filePaths, mapper, cancellationToken))
@@ -159,7 +193,7 @@ namespace GarXmlParser
             }
             catch (OperationCanceledException ex)
             {
-                _logger?.LogInformation("Обработка остановлена в вызывающем коде");
+                _logger?.LogInformation($"Обработка остановлена в вызывающем коде{ex.Message}");
                 return results;
             }
 
@@ -174,13 +208,13 @@ namespace GarXmlParser
         /// <param name="cancellationToken">Токен отмены операции</param>
         /// <param name="progress">Параметр для отслеживания прогресса выполнения парсинга</param>
         /// <returns></returns>
-        public async IAsyncEnumerable<T> StreamZipArchiveFilesAsync<T>(
+        public async IAsyncEnumerable<IMappedObject<T>> StreamZipArchiveFilesAsync<T>(
             string zipFilePath,
             string regexPattern,
             IGarItemMapper<T> mapper,
             [EnumeratorCancellation] CancellationToken cancellationToken = default,
             IProgress<ProcessingProgress>? progress = null
-            )
+            ) where T : class
         {
             var regex = new Regex(regexPattern, RegexOptions.IgnoreCase);
 
@@ -188,29 +222,47 @@ namespace GarXmlParser
             using (ZipArchive archive = new ZipArchive(zipStream, ZipArchiveMode.Read))
             {
                 var matchingEntries = archive.Entries
-                    .Where(entry => !entry.FullName.EndsWith("/") && regex.IsMatch(entry.Name))
+                    .Where(entry => !entry.FullName.EndsWith("/") && regex.IsMatch(entry.FullName))
                     .ToList();
-                int filesCount = matchingEntries.Count;
+                int _filesCount = matchingEntries.Count;
+
+                int _totalItemsCount = 0;
+                int _fileIndex = 0;
+                int _errorCount = 0;
+
                 foreach (ZipArchiveEntry entry in matchingEntries)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
+                    string _fileName = entry.FullName;
                     
-                    int totalItemsCount = 0;
-                    int fileIndex = 0;
-                    string fileName = entry.FullName;
+                    mapper.OnErrorMapping += error =>
+                    {
+                        _errorCount++;
+                        _logger?.LogDebug("Ошибка парсинга: {File}:{Line} - {Message}",
+                            error.FileName, error.LineNumber, error.Exception.Message);
+                    };
 
                     using (Stream entryStream = entry.Open())
                     {
-                        await foreach (var item in _parser.GetXmlObjectFromStreamAsync(entryStream, mapper, fileName, cancellationToken))
+                        await foreach (var item in _parser.GetXmlObjectFromStreamAsync(entryStream, mapper, _fileName, cancellationToken))
                         {
                             cancellationToken.ThrowIfCancellationRequested();
-                            totalItemsCount++;
-                            progress?.Report(new ProcessingProgress(fileIndex, filesCount, entry.Name, totalItemsCount));
+                            _totalItemsCount++;
+                            if (_totalItemsCount % 100 == 0)
+                            {
+                                progress?.Report(new ProcessingProgress(_fileIndex, _filesCount, entry.Name, _totalItemsCount, _errorCount));
+                            }
                             yield return item;
                         }
                     }
-                    fileIndex++;
-                    _logger?.LogInformation("Завершена обработка: {FileName}", fileName);
+                    _fileIndex++;
+                    _logger?.LogInformation("Завершена обработка: {FileName}", _fileName);
+                    progress?.Report(new ProcessingProgress(_fileIndex, _filesCount, entry.Name, _totalItemsCount, _errorCount));
+                    if (_errorCount > 0)
+                    {
+                        _logger?.LogInformation("Обработано файлов {File}: {Success} объектов получено успешно, {Errors} ошибок",
+                            _fileIndex, _totalItemsCount, _errorCount);
+                    }
                 }
             }
         }

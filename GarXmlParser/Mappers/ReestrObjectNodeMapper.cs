@@ -1,4 +1,6 @@
 ﻿using GarXmlParser.GarEntities;
+using GarXmlParser.Mappers.Helpers;
+using GarXmlParser.Mappers.Interfaces;
 using System.Xml.Linq;
 
 namespace GarXmlParser.Mappers
@@ -7,24 +9,65 @@ namespace GarXmlParser.Mappers
     {
         public string NodeName => "OBJECT";
 
-        public event Action<ReestrObject>? OnObjectMapped;
+        public event Action<IMappedObject<ReestrObject>>? OnObjectMapped;
+        public event Action<MappingError>? OnErrorMapping;
 
-        public ReestrObject GetFromXelement(XElement element)
+        public IMappedObject<ReestrObject>? GetFromXelement(XElement element, string fileName, int lineNumber)
         {
-            var reestrObject = new ReestrObject()
+            ReestrObject reestrObject = new ReestrObject();
+            string currentAttribute = "";
+#pragma warning disable CS8604, CS8600, CS8601
+            try
             {
-                OBJECTID = (long)element.Attribute("OBJECTID"),
-                CREATEDATE = DateTime.Parse((string)element.Attribute("CREATEDATE")),
-                CHANGEID = (long)element.Attribute("CHANGEID"),
-                LEVELID = (string)element.Attribute("LEVELID"),
-                UPDATEDATE = DateTime.Parse((string)element.Attribute("UPDATEDATE")),
-                OBJECTGUID = (string)element.Attribute("OBJECTGUID"),
-                ISACTIVE = (REESTR_OBJECTSOBJECTISACTIVE)int.Parse((string)element.Attribute("ISACTIVE"))
-            };
+                currentAttribute = "OBJECTID";
+                reestrObject.OBJECTID = (long)element.Attribute("OBJECTID");
+                
+                currentAttribute = "CREATEDATE"; 
+                reestrObject.CREATEDATE = DateTime.Parse((string)element.Attribute("CREATEDATE"));
+                
+                currentAttribute = "CHANGEID"; 
+                reestrObject.CHANGEID = (long)element.Attribute("CHANGEID");
+                
+                currentAttribute = "LEVELID"; 
+                reestrObject.LEVELID = (string)element.Attribute("LEVELID");
+                
+                currentAttribute = "UPDATEDATE";
+                reestrObject.UPDATEDATE = DateTime.Parse((string)element.Attribute("UPDATEDATE"));
+                
+                currentAttribute = "OBJECTGUID"; 
+                reestrObject.OBJECTGUID = (string)element.Attribute("OBJECTGUID");
+                
+                currentAttribute = "ISACTIVE"; 
+                reestrObject.ISACTIVE = (REESTR_OBJECTSOBJECTISACTIVE)int.Parse((string)element.Attribute("ISACTIVE"));
 
-            OnObjectMapped?.Invoke(reestrObject);
+#pragma warning restore CS8604, CS8600, CS8601
+                MappedObject<ReestrObject> result = new MappedObject<ReestrObject>
+                {
+                    Entity = reestrObject,
+                    OriginalXmlElement = element.ToString(),
+                    SourceFilePath = fileName,
+                    LineNumber = lineNumber
+                };
 
-            return reestrObject;
+                OnObjectMapped?.Invoke(result);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                MappingError mappingError = new MappingError
+                {
+                    Exception = ex,
+                    OriginalXmlElement = element.ToString(),
+                    FileName = fileName,
+                    LineNumber = lineNumber,
+                    AttributeName = currentAttribute,
+                    ErrorTime = DateTime.Now
+                };
+
+                OnErrorMapping?.Invoke(mappingError);
+
+                return null;
+            }
         }
     }
 }

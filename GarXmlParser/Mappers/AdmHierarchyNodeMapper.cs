@@ -1,4 +1,6 @@
 ﻿using GarXmlParser.GarEntities;
+using GarXmlParser.Mappers.Helpers;
+using GarXmlParser.Mappers.Interfaces;
 using System.Xml.Linq;
 
 namespace GarXmlParser.Mappers
@@ -7,37 +9,104 @@ namespace GarXmlParser.Mappers
     {
         public string NodeName => "ITEM";
 
-        public event Action<AdmHierarchy>? OnObjectMapped;
-
-        public AdmHierarchy GetFromXelement(XElement element)
+        public event Action<IMappedObject<AdmHierarchy>>? OnObjectMapped;
+        public event Action<MappingError>? OnErrorMapping;
+#pragma warning disable CS8604, CS8600, CS8601
+        public IMappedObject<AdmHierarchy>? GetFromXelement(XElement element, string fileName, int lineNumber)
         {
-            var admHierarchy = new AdmHierarchy()
+            AdmHierarchy admHierarchy = new AdmHierarchy();
+            string currentAttribute = "";
+            try
             {
-                ID = (int)element.Attribute("ID"),
-                OBJECTID = (int)element.Attribute("OBJECTID"),
-                PARENTOBJID = (long)element.Attribute("PARENTOBJID"),
-                PARENTOBJIDSpecified = element.Attribute("PARENTOBJID") != null,
-                CHANGEID = (long)element.Attribute("CHANGEID"),
-                REGIONCODE = (string)element.Attribute("REGIONCODE"),
-                AREACODE = (string)element.Attribute("AREACODE"),
-                CITYCODE = (string)element.Attribute("CITYCODE"),
-                PLACECODE = (string)element.Attribute("PLACECODE"),
-                PLANCODE = (string)element.Attribute("PLANCODE"),
-                STREETCODE = (string)element.Attribute("STREETCODE"),
-                PREVID = (long?)element.Attribute("PREVID") ?? 0,
-                PREVIDSpecified = (string)element.Attribute("PREVID") != null,
-                NEXTID = (long?)element.Attribute("NEXTID") ?? 0,
-                NEXTIDSpecified = element.Attribute("NEXTID") != null,
-                UPDATEDATE = DateTime.Parse((string)element.Attribute("UPDATEDATE")),
-                STARTDATE = DateTime.Parse((string)element.Attribute("STARTDATE")),
-                ENDDATE = DateTime.Parse((string)element.Attribute("ENDDATE")),
-                ISACTIVE = (AdmHierarchyITEMISACTIVE)int.Parse((string)element.Attribute("ISACTIVE")),
-                PATH = (string)element.Attribute("PATH")
+                currentAttribute = "ID";
+                admHierarchy.ID = (int)element.Attribute("ID");
+
+                currentAttribute = "OBJECTID";
+                admHierarchy.OBJECTID = (int)element.Attribute("OBJECTID");
+
+                currentAttribute = "PARENTOBJID";
+                admHierarchy.PARENTOBJID = (long)element.Attribute("PARENTOBJID");
+                
+                currentAttribute = "PARENTOBJIDSpecified";
+                admHierarchy.PARENTOBJIDSpecified = element.Attribute("PARENTOBJID") != null;
+
+                currentAttribute = "CHANGEID";
+                admHierarchy.CHANGEID = (long)element.Attribute("CHANGEID");
+
+                currentAttribute = "REGIONCODE";
+                admHierarchy.REGIONCODE = (string)element.Attribute("REGIONCODE");
+
+                currentAttribute = "AREACODE";
+                admHierarchy.AREACODE = (string)element.Attribute("AREACODE");
+
+                currentAttribute = "CITYCODE";
+                admHierarchy.CITYCODE = (string)element.Attribute("CITYCODE");
+
+                currentAttribute = "PLACECODE";
+                admHierarchy.PLACECODE = (string)element.Attribute("PLACECODE");
+
+                currentAttribute = "PLANCODE";
+                admHierarchy.PLANCODE = (string)element.Attribute("PLANCODE");
+
+                currentAttribute = "STREETCODE";
+                admHierarchy.STREETCODE = (string)element.Attribute("STREETCODE");
+
+                currentAttribute = "PREVID";
+                admHierarchy.PREVID = (long?)element.Attribute("PREVID") ?? 0;
+
+                currentAttribute = "PREVIDSpecified";
+                admHierarchy.PREVIDSpecified = (string)element.Attribute("PREVID") != null;
+
+                currentAttribute = "NEXTID";
+                admHierarchy.NEXTID = (long?)element.Attribute("NEXTID") ?? 0;
+
+                currentAttribute = "NEXTIDSpecified";
+                admHierarchy.NEXTIDSpecified = element.Attribute("NEXTID") != null;
+
+                currentAttribute = "UPDATEDATE";
+                admHierarchy.UPDATEDATE = DateTime.Parse((string)element.Attribute("UPDATEDATE"));
+
+                currentAttribute = "STARTDATE";
+                admHierarchy.STARTDATE = DateTime.Parse((string)element.Attribute("STARTDATE"));
+
+                currentAttribute = "ENDDATE";
+                admHierarchy.ENDDATE = DateTime.Parse((string)element.Attribute("ENDDATE"));
+
+                currentAttribute = "ISACTIVE";
+                admHierarchy.ISACTIVE = (AdmHierarchyITEMISACTIVE)int.Parse((string)element.Attribute("ISACTIVE"));
+
+                currentAttribute = "PATH";
+                admHierarchy.PATH = (string)element.Attribute("PATH");
+#pragma warning restore CS8604, CS8600, CS8601
+
+                var result = new MappedObject<AdmHierarchy>
+            {
+                Entity = admHierarchy,
+                OriginalXmlElement = element.ToString(),
+                SourceFilePath = fileName,
+                LineNumber = lineNumber
             };
 
-            OnObjectMapped?.Invoke(admHierarchy);
+            OnObjectMapped?.Invoke(result);
 
-            return admHierarchy;
+            return result;
+            }
+            catch(Exception ex)
+            {
+                MappingError mappingError = new MappingError
+                {
+                    Exception = ex,
+                    OriginalXmlElement = element.ToString(),
+                    FileName = fileName,
+                    LineNumber = lineNumber,
+                    AttributeName = currentAttribute,
+                    ErrorTime = DateTime.Now
+                };
+
+                OnErrorMapping?.Invoke(mappingError);
+
+                return null;
+            }
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using GarXmlParser.GarEntities;
+using GarXmlParser.Mappers.Helpers;
+using GarXmlParser.Mappers.Interfaces;
 using System.Xml.Linq;
 
 namespace GarXmlParser.Mappers
@@ -7,19 +9,50 @@ namespace GarXmlParser.Mappers
     {
         public string NodeName => "NDOCKIND";
 
-        public event Action<NormativeDocKind>? OnObjectMapped;
+        public event Action<IMappedObject<NormativeDocKind>>? OnObjectMapped;
+        public event Action<MappingError>? OnErrorMapping;
 
-        public NormativeDocKind GetFromXelement(XElement element)
+        public IMappedObject<NormativeDocKind>? GetFromXelement(XElement element, string fileName, int lineNumber)
         {
-            var normDocKind = new NormativeDocKind()
+            NormativeDocKind normDocKind = new NormativeDocKind();
+            string currentAttribute = "";
+#pragma warning disable CS8604, CS8600, CS8601
+            try
             {
-                ID = (string)element.Attribute("ID"),
-                NAME = (string)element.Attribute("NAME"),
-            };
+                currentAttribute = "ID";
+                normDocKind.ID = (string)element.Attribute("ID");
 
-            OnObjectMapped?.Invoke(normDocKind);
+                currentAttribute = "NAME";
+                normDocKind.NAME = (string)element.Attribute("NAME");
 
-            return normDocKind;
+                MappedObject<NormativeDocKind> result = new MappedObject<NormativeDocKind>
+                {
+                    Entity = normDocKind,
+                    OriginalXmlElement = element.ToString(),
+                    SourceFilePath = fileName,
+                    LineNumber = lineNumber
+                };
+
+                OnObjectMapped?.Invoke(result);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                MappingError mappingError = new MappingError
+                {
+                    Exception = ex,
+                    OriginalXmlElement = element.ToString(),
+                    FileName = fileName,
+                    LineNumber = lineNumber,
+                    AttributeName = currentAttribute,
+                    ErrorTime = DateTime.Now
+                };
+
+                OnErrorMapping?.Invoke(mappingError);
+
+                return null;
+            }
+#pragma warning restore CS8604, CS8600, CS8601
         }
     }
 }
