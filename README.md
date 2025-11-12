@@ -55,16 +55,16 @@
 
 Структура проекта:
 
-garxmlparser/
-├── docker-compose.yml    # Конфигурация всех сервисов
-├── .env                  # Переменные окружения (создать из .env.example)
-├── GarXmlParser.sln	  # Файл решения
-├── src/                  # Исходный код приложения
-├── db/
-│   └── init/             # SQL скрипты инициализации БД
-├── data/				  # Исходные данные в xml формате упакованные в zip архив
-└── pgadmin/
-     └── servers.json     # Конфигурация pgAdmin
+	garxmlparser/
+	├── docker-compose.yml    # Конфигурация всех сервисов
+	├── .env                  # Переменные окружения (создать из .env.example)
+	├── GarXmlParser.sln	  # Файл решения
+	├── src/                  # Исходный код приложения
+	├── db/
+	│   └── init/             # SQL скрипты инициализации БД
+	├── data/				  # Исходные данные в xml формате упакованные в zip архив
+	└── pgadmin/
+	     └── servers.json     # Конфигурация pgAdmin
 
 
 Сервисы
