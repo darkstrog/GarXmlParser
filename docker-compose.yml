@@ -1,0 +1,58 @@
+services:
+  parser-console:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: GARparser
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=db;Database=GARBase;User Id=postgres;Password=${DB_PASSWORD}
+      - SourceSettings__ZipSourcePath=${SourceSettings_ZipSourcePath}
+      - RegionsSettings__Default=${RegionsSettings_Default}
+    tty: true
+    stdin_open: true
+    ports:
+      - "5000:80"
+    volumes:
+      - "./data:/data"
+    init: true
+    privileged: false
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:15
+    container_name: GARBase_db
+    environment:
+      - POSTGRES_DB=GARBase
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_HOST_AUTH_METHOD=md5
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d GARBase"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@gar.demo
+      - PGADMIN_DEFAULT_PASSWORD=admin123
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+      - ./pgadmin/servers.json:/pgadmin4/servers.json
+      - ./pgadmin/.pgpass:/pgpass:ro
+    depends_on:
+      - db
+volumes:
+  postgres_data:
+  pgadmin_data:
