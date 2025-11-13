@@ -23,6 +23,9 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="appsettings_default.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="gar_xml.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

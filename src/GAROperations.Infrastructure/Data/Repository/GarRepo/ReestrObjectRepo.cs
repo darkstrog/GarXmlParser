@@ -13,19 +13,18 @@ namespace GAROperations.Infrastructure.Data.Repository.GarRepo
         private readonly ILogger _logger;
 
         #region sql-запросы
-        private const string IsExistQuery = "SELECT EXISTS(SELECT 1 FROM operation_type WHERE objectid = @Objectid AND changeid = @Changeid)";
+        private const string IsExistQuery = "SELECT EXISTS(SELECT 1 FROM reestr_object WHERE objectid = @Objectid AND changeid = @Changeid)";
         private const string GetByIdAsyncQuery = @"SELECT objectid, createdate, changeid, levelid, updatedate, objectguid, isactive 
-                                                   FROM operation_type 
+                                                   FROM reestr_object
                                                    WHERE objectid = @Objectid AND changeid = @Changeid";
-        private const string CreateAsyncQuery = @"INSERT INTO operation_type(id, name, shortname, description, 
-                                                                             updatedate, startdate, enddate, isactive)
-                                                  VALUES(@id, @name, @shortname, @description, 
-                                                                             @updatedate, @startdate, @enddate, @isactive)";
+        private const string CreateAsyncQuery = @"INSERT INTO reestr_object (objectid, createdate, changeid, 
+                                                                             levelid, updatedate, objectguid, isactive)
+                                                  VALUES(@objectid, @createdate, @changeid, @levelid, @updatedate, @objectguid, @isactive)";
 
-        private const string CreateBulkAsyncQuery = @"INSERT INTO operation_type(id, name, shortname, description, 
-                                                                             updatedate, startdate, enddate, isactive)
-                                                      VALUES(@id, @name, @shortname, @description, 
-                                                                             @updatedate, @startdate, @enddate, @isactive)";
+        private const string CreateBulkAsyncQuery = @"INSERT INTO reestr_object(objectid, createdate, changeid, levelid,
+                                                                                updatedate, objectguid, isactive)
+                                                      VALUES(@objectid, @createdate, @changeid, @levelid,
+                                                             @updatedate, @objectguid, @isactive)";
         #endregion
         public ReestrObjectRepo(string connectionStringGar, ILogger logger)
         {

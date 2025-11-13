@@ -32,7 +32,7 @@ namespace GarXmlParserConsole
 
             var progress = new Progress<ProcessingProgress>(report =>
             {
-                var message = $"Прогресс маппинга XML: Всего файлов: {report.TotalFiles} " +
+                var message = DateTime.Now + $" Прогресс маппинга XML: Всего файлов: {report.TotalFiles} " +
                               $"| Обработано файлов: {report.CurrentFileIndex} " +
                               $"| Текущий файл:{Path.GetFileName(report.CurrentFilePath)} " +
                               $"| Получено объектов: {report.TotalItemsProcessed} " +
@@ -56,7 +56,7 @@ namespace GarXmlParserConsole
         {
             var progress = new Progress<ProcessingProgress>(report =>
             {
-                var message = $"Прогресс маппинга XML: Всего файлов: {report.TotalFiles} " +
+                var message = DateTime.Now + $"Прогресс маппинга XML: Всего файлов: {report.TotalFiles} " +
                               $"| Обработано файлов: {report.CurrentFileIndex} " +
                               $"| Текущий файл:{Path.GetFileName(report.CurrentFilePath)} " +
                               $"| Получено объектов: {report.TotalItemsProcessed} " +
@@ -96,7 +96,7 @@ namespace GarXmlParserConsole
         {
             var progress = new Progress<ProcessingProgress>(report =>
             {
-                var message = $"Прогресс маппинга XML: Всего файлов: {report.TotalFiles} " +
+                var message = DateTime.Now + $"Прогресс маппинга XML: Всего файлов: {report.TotalFiles} " +
                               $"| Обработано файлов: {report.CurrentFileIndex} " +
                               $"| Текущий файл:{Path.GetFileName(report.CurrentFilePath)} " +
                               $"| Получено объектов: {report.TotalItemsProcessed} " +

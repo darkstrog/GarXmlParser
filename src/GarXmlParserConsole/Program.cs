@@ -23,6 +23,7 @@ namespace GarXmlParserConsole
         static async Task Main(string[] args)
         {
             var configuration = new ConfigurationBuilder()
+                                    .AddJsonFile("appsettings_default.json", optional: true)
                                     .AddJsonFile("appsettings.json", optional: true)
                                     .AddEnvironmentVariables()
                                     .Build();

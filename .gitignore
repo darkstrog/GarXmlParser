@@ -2,6 +2,15 @@
 bin/
 obj/
 
+## Cohfigs ##
+appsettings.json
+appsettings.*.json
+!.appsettings_default.json
+
+## Environment files ##
+.env
+*.env
+
 ## IDE ##
 .vs/
 *.user
