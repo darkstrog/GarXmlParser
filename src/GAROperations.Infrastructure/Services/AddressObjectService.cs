@@ -16,16 +16,16 @@ namespace GAROperations.Infrastructure.Services
             _repository = repo;
             _problemDataService = problemDataService;
         }
-        public async Task InsertDataAsync(AddressObjectDto addressObject)
+        public async Task InsertDataAsync(AddressObjectDto entity)
         {
             try
             {
-                _logger?.LogInformation("Добавление одной записи AddressObject с OBJECTID: {OBJECTID} в базу", addressObject.OBJECTID);
-                await _repository.InsertAsync(addressObject);
+                _logger?.LogInformation("Добавление одной записи AddressObject с OBJECTID: {OBJECTID} в базу", entity.OBJECTID);
+                await _repository.InsertAsync(entity);
             }
             catch (Exception)
             {
-                _logger?.LogError("Ошибка При добавлении записи AddressObject с OBJECTID: {OBJECTID}", addressObject.OBJECTID);
+                _logger?.LogError("Ошибка При добавлении записи AddressObject с OBJECTID: {OBJECTID}", entity.OBJECTID);
                 throw;
             }
         }
@@ -35,11 +35,11 @@ namespace GAROperations.Infrastructure.Services
         /// <param name="addressObjects"></param>
         /// <param name="batchSize"></param>
         /// <returns></returns>
-        public async Task InsertDataBulkAsync(IAsyncEnumerable<AddressObjectDto> addressObjects, int batchSize = 1000)
+        public async Task InsertDataBulkAsync(IAsyncEnumerable<AddressObjectDto> entities, int batchSize = 1000)
         {
             var batch = new List<AddressObjectDto>(batchSize);
 
-            await foreach (var item in addressObjects)
+            await foreach (var item in entities)
             {
                 batch.Add(item);
 
@@ -81,11 +81,11 @@ namespace GAROperations.Infrastructure.Services
         /// <param name="addressObjects"></param>
         /// <param name="batchSize"></param>
         /// <returns></returns>
-        public async Task InsertAddressObjectsBulk(IEnumerable<AddressObjectDto> addressObjects, int batchSize = 100)
+        public async Task InsertAddressObjectsBulk(IEnumerable<AddressObjectDto> entities, int batchSize = 100)
         {
             var batch = new List<AddressObjectDto>(batchSize);
 
-            foreach (var item in addressObjects)
+            foreach (var item in entities)
             {
                 batch.Add(item);
 

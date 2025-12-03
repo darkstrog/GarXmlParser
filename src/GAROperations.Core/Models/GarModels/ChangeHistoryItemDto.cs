@@ -15,4 +15,8 @@ public class ChangeHistoryItemDto
 
     [DataType(DataType.Date)]
     public required DateTime CHANGEDATE { get; set; }
+
+    public string? OriginalXMLString { get; set; }
+
+    public string? XmlFilePath { get; set; }
 }

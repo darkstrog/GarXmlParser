@@ -32,4 +32,8 @@ public class SteadDto
     public required bool ISACTUAL { get; set; }
 
     public required bool ISACTIVE { get; set; }
+
+    public string? OriginalXMLString { get; set; }
+
+    public string? XmlFilePath { get; set; }
 }

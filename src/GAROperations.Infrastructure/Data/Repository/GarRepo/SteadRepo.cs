@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using GAROperations.Core.Interfaces.Repository;
 using GAROperations.Core.Models.GarModels;
 using Microsoft.Extensions.Logging;
 using Npgsql;

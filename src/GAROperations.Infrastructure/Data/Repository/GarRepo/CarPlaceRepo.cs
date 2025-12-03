@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace GAROperations.Infrastructure.Data.Repository.GarRepo
 {
-    public class CarPlaceRepo: ICarPlacesRepo
+    public class CarPlaceRepo: ICarPlaceRepo
     {
         private readonly string _connectionStringGar;
         private readonly ILogger _logger;

@@ -137,12 +137,13 @@ CREATE TABLE IF NOT EXISTS carplaces_params (
 );
 
 CREATE TABLE IF NOT EXISTS change_history_item (
-    changeid BIGINT PRIMARY KEY,
+    changeid BIGINT NOT NULL,
     objectid BIGINT NOT NULL,
     adrobjectid UUID NOT NULL,
     opertypeid INTEGER NOT NULL,
     ndocid BIGINT NULL,
-    changedate DATE NOT NULL
+    changedate DATE NOT NULL,
+    PRIMARY KEY(changeid,objectid)
 );
 
 CREATE TABLE IF NOT EXISTS house_types (
@@ -232,7 +233,7 @@ CREATE TABLE IF NOT EXISTS normative_doc_types (
 );
 
 CREATE TABLE IF NOT EXISTS object_levels (
-    level INTEGER NOT NULL,
+    level INTEGER PRIMARY KEY,
     name VARCHAR NOT NULL,
     shortname VARCHAR NOT NULL,
     updatedate DATE NOT NULL,

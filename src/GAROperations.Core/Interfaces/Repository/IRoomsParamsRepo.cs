@@ -2,7 +2,7 @@
 
 namespace GAROperations.Core.Interfaces.Repository
 {
-    public interface IRoomsParamsRepo:IGarRepository<ParamDto>
+    public interface IRoomParamsRepo:IGarRepository<ParamDto>
     {
     }
 }

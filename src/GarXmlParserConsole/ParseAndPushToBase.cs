@@ -10,6 +10,16 @@ namespace GarXmlParserConsole
 {
     internal class ParseAndPushToBase
     {
+        /// <summary>
+        /// Заливка в базу AddressObjectDivision
+        /// </summary>
+        /// <param name="garProcessor"></param>
+        /// <param name="loggerFactory"></param>
+        /// <param name="connectionString"></param>
+        /// <param name="token"></param>
+        /// <param name="zipPath"></param>
+        /// <param name="regions"></param>
+        /// <returns></returns>
         public async Task<bool> AddressObjectDivisionDataProcess(GarXmlProcessor garProcessor, ILoggerFactory loggerFactory,
                                                     string connectionString, CancellationToken token,
                                                     string zipPath, IEnumerable<int>? regions = null)
@@ -49,7 +59,16 @@ namespace GarXmlParserConsole
             await addressObjectDivisionItemService.InsertDataBulkAsync(addressObjectDivisionItemDtoMapper.MapToDtoAsync(data, token));
             return true;
         }
-
+        /// <summary>
+        /// Заливка в базу AddressObject
+        /// </summary>
+        /// <param name="garProcessor"></param>
+        /// <param name="loggerFactory"></param>
+        /// <param name="connectionString"></param>
+        /// <param name="token"></param>
+        /// <param name="zipPath"></param>
+        /// <param name="regions"></param>
+        /// <returns></returns>
         public async Task<bool> AddressObjectDataProcess(GarXmlProcessor garProcessor, ILoggerFactory loggerFactory,
                                                         string connectionString, CancellationToken token,
                                                         string zipPath, IEnumerable<int>? regions = null)
@@ -89,7 +108,16 @@ namespace GarXmlParserConsole
             await addressObjectService.InsertDataBulkAsync(addressObjectDtoMapper.MapToDtoAsync(data, token));
             return true;
         }
-
+        /// <summary>
+        /// Заливка в базу AdmHierarchy
+        /// </summary>
+        /// <param name="garProcessor"></param>
+        /// <param name="loggerFactory"></param>
+        /// <param name="connectionString"></param>
+        /// <param name="token"></param>
+        /// <param name="zipPath"></param>
+        /// <param name="regions"></param>
+        /// <returns></returns>
         public async Task<bool> AdmHierarchyDataProcess(GarXmlProcessor garProcessor, ILoggerFactory loggerFactory,
                                                         string connectionString, CancellationToken token,
                                                         string zipPath, IEnumerable<int>? regions = null)
@@ -127,6 +155,123 @@ namespace GarXmlParserConsole
             AdmHierarchyDtoMapper admHierarchyDtoMapper = new AdmHierarchyDtoMapper(admHierarchyDtoMapperLog);
 
             await admHierarchyService.InsertDataBulkAsync(admHierarchyDtoMapper.MapToDtoAsync(data, token));
+            return true;
+        }
+        /// <summary>
+        /// Заливка в базу AddressObjectType
+        /// </summary>
+        /// <param name="garProcessor"></param>
+        /// <param name="loggerFactory"></param>
+        /// <param name="connectionString"></param>
+        /// <param name="token"></param>
+        /// <param name="zipPath"></param>
+        /// <returns></returns>
+        public async Task<bool> AddressObjectTypeDataProcess(GarXmlProcessor garProcessor, ILoggerFactory loggerFactory,
+                                                    string connectionString, CancellationToken token,
+                                                    string zipPath)
+        {
+            #region Loggers
+
+            ILogger<JsonProblemDataService<AddressObjectTypeDto>> problemDataServiceLog = loggerFactory.CreateLogger<JsonProblemDataService<AddressObjectTypeDto>>();
+            ILogger<AddressObjectTypeService> serviceLog = loggerFactory.CreateLogger<AddressObjectTypeService>();
+            ILogger<AddressObjectTypeDtoMapper> dtoMapperLog = loggerFactory.CreateLogger<AddressObjectTypeDtoMapper>();
+            ILogger<AddressObjectTypeRepo> repoLog = loggerFactory.CreateLogger<AddressObjectTypeRepo>();
+
+            #endregion
+
+            #region regex_pattern
+
+            string Pattern = @"^AS_ADDR_OBJ_TYPES_\d{8}_[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}\.XML$";
+
+            #endregion
+
+            #region mappers
+
+            AddressObjectTypeNodeMapper dataMapper = new AddressObjectTypeNodeMapper();
+            AddressObjectTypeDtoMapper dtoMapper = new AddressObjectTypeDtoMapper(dtoMapperLog);
+
+            #endregion
+            //Настройка сообщений прогресса парсинга
+            var progress = new Progress<ProcessingProgress>(report =>
+            {
+                var message = DateTime.Now + $" Прогресс маппинга XML: Всего файлов: {report.TotalFiles} " +
+                              $"| Обработано файлов: {report.CurrentFileIndex} " +
+                              $"| Текущий файл:{Path.GetFileName(report.CurrentFilePath)} " +
+                              $"| Получено объектов: {report.TotalItemsProcessed} " +
+                              $"| Ошибок: {report.failedItems}";
+                Console.WriteLine(message);
+                Console.ResetColor();
+            });
+
+            JsonProblemDataService<AddressObjectTypeDto> jsonProblemDataService = new JsonProblemDataService<AddressObjectTypeDto>(problemDataServiceLog);
+
+            AddressObjectTypeService entityService = new AddressObjectTypeService(new AddressObjectTypeRepo(connectionString, repoLog), jsonProblemDataService, serviceLog);
+
+            var data = garProcessor.StreamZipArchiveFilesAsync(zipPath, Pattern, dataMapper, token, progress);
+            await entityService.InsertDataBulkAsync(dtoMapper.MapToDtoAsync(data, token));
+            return true;
+        }
+
+        /// <summary>
+        /// Заливка в базу AddressObjectParams
+        /// </summary>
+        /// <param name="garProcessor"></param>
+        /// <param name="loggerFactory"></param>
+        /// <param name="connectionString"></param>
+        /// <param name="token"></param>
+        /// <param name="zipPath"></param>
+        /// <param name="regions"></param>
+        /// <returns></returns>
+        public async Task<bool> AddressObjectParamsDataProcess(GarXmlProcessor garProcessor, ILoggerFactory loggerFactory,
+                                                    string connectionString, CancellationToken token,
+                                                    string zipPath, IEnumerable<int>? regions = null)
+        {
+            #region Loggers
+
+            ILogger<JsonProblemDataService<ParamDto>> problemDataServiceLog = loggerFactory.CreateLogger<JsonProblemDataService<ParamDto>>();
+            ILogger<AddressObjectParamsService> serviceLog = loggerFactory.CreateLogger<AddressObjectParamsService>();
+            //Схема Param общая для всех сущностей содержищих в названии Param поэтому и класс DTO для них общий.
+            ILogger<ParamDtoMapper> dtoMapperLog = loggerFactory.CreateLogger<ParamDtoMapper>();
+            ILogger<AddressObjectParamsRepo> repoLog = loggerFactory.CreateLogger<AddressObjectParamsRepo>();
+
+            #endregion
+
+            #region regex_pattern
+
+            var regionsFilter = "0[1-9]|[1-9][0-9]";
+            if (regions != null)
+            {
+                regionsFilter = string.Join("|", regions.Select(n => n.ToString("D2")));
+            }
+
+            string Pattern = @$"^(?:{regionsFilter})[/\\]" + @"AS_ADDR_OBJ_PARAMS_\d{8}_[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}\.XML$";
+
+            #endregion
+
+            #region mappers
+
+            ParamNodeMapper dataMapper = new ParamNodeMapper();
+            ParamDtoMapper dtoMapper = new ParamDtoMapper(dtoMapperLog);
+
+            #endregion
+            //Настройка сообщений прогресса парсинга
+            var progress = new Progress<ProcessingProgress>(report =>
+            {
+                var message = DateTime.Now + $" Прогресс маппинга XML: Всего файлов: {report.TotalFiles} " +
+                              $"| Обработано файлов: {report.CurrentFileIndex} " +
+                              $"| Текущий файл:{Path.GetFileName(report.CurrentFilePath)} " +
+                              $"| Получено объектов: {report.TotalItemsProcessed} " +
+                              $"| Ошибок: {report.failedItems}";
+                Console.WriteLine(message);
+                Console.ResetColor();
+            });
+
+            JsonProblemDataService<ParamDto> jsonProblemDataService = new JsonProblemDataService<ParamDto>(problemDataServiceLog);
+
+            AddressObjectParamsService entityService = new AddressObjectParamsService(new AddressObjectParamsRepo(connectionString, repoLog), jsonProblemDataService, serviceLog);
+
+            var data = garProcessor.StreamZipArchiveFilesAsync(zipPath, Pattern, dataMapper, token, progress);
+            await entityService.InsertDataBulkAsync(dtoMapper.MapToDtoAsync(data, token));
             return true;
         }
     }

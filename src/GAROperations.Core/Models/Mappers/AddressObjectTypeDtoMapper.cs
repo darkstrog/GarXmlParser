@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GAROperations.Core.Models.Mappers
 {
-    internal class AddressObjectTypeDtoMapper : IDtoMapper<IMappedObject<AddressObjectType>, AddressObjectTypeDto>
+    public class AddressObjectTypeDtoMapper : IDtoMapper<IMappedObject<AddressObjectType>, AddressObjectTypeDto>
     {
         private readonly ILogger _logger;
 

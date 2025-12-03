@@ -22,26 +22,26 @@ namespace GAROperations.Infrastructure.Services
         {
             try
             {
-                _logger?.LogInformation("Добавление одной записи AddressObject с OBJECTID: {OBJECTID} в базу", entity.ID);
+                _logger?.LogInformation("Добавление одной записи AddressObjectDivisionItem с OBJECTID: {OBJECTID} в базу", entity.ID);
                 await _repository.InsertAsync(entity);
             }
             catch (Exception)
             {
-                _logger?.LogError("Ошибка При добавлении записи AddressObject с OBJECTID: {OBJECTID}", entity.ID);
+                _logger?.LogError("Ошибка При добавлении записи AddressObjectDivisionItem  с OBJECTID: {OBJECTID}", entity.ID);
                 throw;
             }
         }
         /// <summary>
         /// Метод для массовой асинхронной заливки объектов из асинхронного перечисляемого источника
         /// </summary>
-        /// <param name="addressObjects"></param>
-        /// <param name="batchSize"></param>
+        /// <param name="entities">IAsyncEnumerable коллекция Dto</param>
+        /// <param name="batchSize">Размер пачки для оттравки одной транзакцией по умолчанию 1000</param>
         /// <returns></returns>
-        public async Task InsertDataBulkAsync(IAsyncEnumerable<AddressObjectDivisionItemDto> entityes, int batchSize = 1000)
+        public async Task InsertDataBulkAsync(IAsyncEnumerable<AddressObjectDivisionItemDto> entities, int batchSize = 1000)
         {
             var batch = new List<AddressObjectDivisionItemDto>(batchSize);
 
-            await foreach (var item in entityes)
+            await foreach (var item in entities)
             {
                 batch.Add(item);
 
@@ -60,8 +60,8 @@ namespace GAROperations.Infrastructure.Services
         /// <summary>
         /// Пакетная заливка в базу с откатом и дроблением пакета для последующих повторных попыток  в случае неудачи
         /// </summary>
-        /// <param name="batch"></param>
-        /// <param name="originalBatchSize"></param>
+        /// <param name="batch">Материализованная пачка объектов для отправки в бд</param>
+        /// <param name="originalBatchSize">Оригинальный размер пачки объектов</param>
         /// <returns></returns>
         private async Task ProcessBatchWithFallback(List<AddressObjectDivisionItemDto> batch, int originalBatchSize)
         {
@@ -74,20 +74,22 @@ namespace GAROperations.Infrastructure.Services
             {
                 _logger?.LogWarning(ex, "Ошибка при обработке пачки из {Count} записей, дробим на более мелкие", batch.Count);
 
-                await InsertAddressObjectsBulk(batch, Math.Max(1, originalBatchSize / 10));
+                await InsertEntitiesBulk(batch, Math.Max(1, originalBatchSize / 10));
             }
         }
         /// <summary>
-        /// Метод для массовой залики объектов в базу 
+        /// Метод для залики объектов в базу мелкими пачками
+        /// Следующий метод в цепочке в случае неудачи будет пытаться записать объекты из пачки штучно,
+        /// поэтому пачку не стоит делать большой
         /// </summary>
-        /// <param name="addressObjects"></param>
+        /// <param name="entities"></param>
         /// <param name="batchSize"></param>
         /// <returns></returns>
-        public async Task InsertAddressObjectsBulk(IEnumerable<AddressObjectDivisionItemDto> addressObjects, int batchSize = 100)
+        public async Task InsertEntitiesBulk(IEnumerable<AddressObjectDivisionItemDto> entities, int batchSize = 100)
         {
             var batch = new List<AddressObjectDivisionItemDto>(batchSize);
 
-            foreach (var item in addressObjects)
+            foreach (var item in entities)
             {
                 batch.Add(item);
 

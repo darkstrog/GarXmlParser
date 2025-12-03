@@ -22,4 +22,8 @@ public class ApartmentTypeDto
     public required DateTime ENDDATE { get; set; }
 
     public required bool ISACTIVE { get; set; }
+
+    public string? OriginalXMLString { get; set; }
+
+    public string? XmlFilePath { get; set; }
 }

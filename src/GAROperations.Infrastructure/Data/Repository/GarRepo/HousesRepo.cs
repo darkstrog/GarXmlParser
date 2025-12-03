@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace GAROperations.Infrastructure.Data.Repository.GarRepo
 {
-    public class HouseRepo: IHouseRepo
+    public class HousesRepo: IHousesRepo
     {
         private readonly string _connectionStringGar;
         private readonly ILogger _logger;
@@ -33,7 +33,7 @@ namespace GAROperations.Infrastructure.Data.Repository.GarRepo
                                                                       @opertypeid, @previd, @nextid, @updatedate, @startdate, 
                                                                       @enddate, @isactual, @isactive)";
         #endregion
-        public HouseRepo(string connectionStringGar, ILogger logger)
+        public HousesRepo(string connectionStringGar, ILogger logger)
         {
             _connectionStringGar = connectionStringGar;
             _logger = logger;

@@ -30,4 +30,8 @@ public class MunHierarchyDto
     public required bool ISACTIVE { get; set; }
 
     public required string PATH { get; set; }
+
+    public string? OriginalXMLString { get; set; }
+
+    public string? XmlFilePath { get; set; }
 }

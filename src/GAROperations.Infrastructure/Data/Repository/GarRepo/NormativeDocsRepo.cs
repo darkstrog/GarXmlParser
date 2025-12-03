@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace GAROperations.Infrastructure.Data.Repository.GarRepo
 {
-    public class NormativeDocRepo: INormativeDocRepo
+    public class NormativeDocRepo: INormativeDocsRepo
     {
         private readonly string _connectionStringGar;
         private readonly ILogger _logger;

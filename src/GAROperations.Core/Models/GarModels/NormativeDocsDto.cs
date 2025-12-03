@@ -30,4 +30,8 @@ public class NormativeDocDto
     public required DateTime? ACCDATE { get; set; }
 
     public required string COMMENT { get; set; }
+
+    public string? OriginalXMLString { get; set; }
+
+    public string? XmlFilePath { get; set; }
 }

@@ -17,12 +17,12 @@ namespace GAROperations.Infrastructure.Data.Repository.GarRepo
         private const string GetByIdAsyncQuery = "SELECT * FROM address_object_types WHERE id = @Id";
         private const string CreateAsyncQuery = @"INSERT INTO address_object_types (id, level, shortname, name, description, 
                                                                                     updatedate, startdate, enddate, isactive)
-                                                  VALUES (@id, @level, @shortname, @name, @description, 
+                                                  VALUES (@id, @level, @shortname, @name, @desc, 
                                                                                     @updatedate, @startdate, @enddate, @isactive)";
 
         private const string CreateBulkAsyncQuery = @"INSERT INTO address_object_types (id, level, shortname, name, description, 
                                                                                     updatedate, startdate, enddate, isactive)
-                                                  VALUES (@id, @level, @shortname, @name, @description, 
+                                                  VALUES (@id, @level, @shortname, @name, @desc, 
                                                                                     @updatedate, @startdate, @enddate, @isactive)";
 
         public AddressObjectTypeRepo(string connectionStringGar, ILogger logger)

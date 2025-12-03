@@ -67,9 +67,19 @@ namespace GarXmlParserConsole
                                                                 connectionString,
                                                                 token,
                                                                 zipPath, regions);
+            await parseAndPushToBase.AddressObjectTypeDataProcess(garProcessor,
+                                                                loggerFactory,
+                                                                connectionString,
+                                                                token,
+                                                                zipPath);
+            await parseAndPushToBase.AddressObjectParamsDataProcess(garProcessor,
+                                                                loggerFactory,
+                                                                connectionString,
+                                                                token,
+                                                                zipPath);
             time_processing.Stop();
             var timeSpan = TimeSpan.FromMilliseconds(time_processing.ElapsedMilliseconds);
-            Console.WriteLine($"метод закончил обработку за {timeSpan.Minutes}м : {timeSpan.Seconds}с : {timeSpan.Milliseconds}мс");
+            Console.WriteLine($"Время обработки: {timeSpan.Hours}ч : {timeSpan.Minutes}м : {timeSpan.Seconds}с : {timeSpan.Milliseconds}мс");
             Console.WriteLine("Готово");
             Console.ReadLine();
         }

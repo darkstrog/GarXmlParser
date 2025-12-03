@@ -12,4 +12,8 @@ public class NormativeDocTypeDto
 
     [DataType(DataType.Date)]
     public required DateTime ENDDATE { get; set; }
+
+    public string? OriginalXMLString { get; set; }
+
+    public string? XmlFilePath { get; set; }
 }
