@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "GARReplication": {
+      "commandName": "Project",
+      "commandLineArgs": "config set --help"
+    }
+  }
+}

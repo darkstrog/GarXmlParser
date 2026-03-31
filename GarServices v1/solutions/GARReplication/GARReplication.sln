@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36203.30 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GARReplication", "..\..\src\services\GARReplication\GARReplication\GARReplication.csproj", "{6F520139-6888-EC86-9A5B-251D27174F77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GARReplication.Core", "..\..\src\services\GARReplication\GARReplication.Core\GARReplication.Core.csproj", "{3382157D-1F00-93EF-2FF0-F8D7F7135DD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GarXmlParser", "..\..\src\shared\GarXmlParser\GarXmlParser.csproj", "{C3CD6DA6-DED5-024A-CAFD-10B72AA106DC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6F520139-6888-EC86-9A5B-251D27174F77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F520139-6888-EC86-9A5B-251D27174F77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F520139-6888-EC86-9A5B-251D27174F77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F520139-6888-EC86-9A5B-251D27174F77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3382157D-1F00-93EF-2FF0-F8D7F7135DD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3382157D-1F00-93EF-2FF0-F8D7F7135DD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3382157D-1F00-93EF-2FF0-F8D7F7135DD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3382157D-1F00-93EF-2FF0-F8D7F7135DD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3CD6DA6-DED5-024A-CAFD-10B72AA106DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3CD6DA6-DED5-024A-CAFD-10B72AA106DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3CD6DA6-DED5-024A-CAFD-10B72AA106DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3CD6DA6-DED5-024A-CAFD-10B72AA106DC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {67D46FE6-8C28-4251-B128-4FEFA772D666}
+	EndGlobalSection
+EndGlobal
