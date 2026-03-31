@@ -44,10 +44,10 @@
 	ReplicationSettings_Strategy=FullRepl
 	ReplicationSettings_BatchSize=1000000
 
-# /data из корня проекта в compose смонтирована как том поэтому архив можно положить в нее
-# Regions допускает null, в этом случае парсинг отработает по всем xml внутри архива
-# Strategy - пока две FullRepl - все сущности ГАР и WithoutCHRepl - все без таблицы ChangeHistory
-# BatchSize - размер пачки собираемой перед записью в базу данных одной транзакцией
+/data из корня проекта в compose смонтирована как том поэтому архив можно положить в нее
+Regions допускает null, в этом случае парсинг отработает по всем xml внутри архива
+Strategy - пока две FullRepl - все сущности ГАР и WithoutCHRepl - все без таблицы ChangeHistory
+BatchSize - размер пачки собираемой перед записью в базу данных одной транзакцией
 
 
 Быстрый старт с Docker:
@@ -94,20 +94,19 @@
 
 Структура проекта:
 
-GarServices
-├───apps
-├───data			# Исходные xml выгрузки по умолчанию
-├───db				# Скрипты инициализации БД (PostgreSQL)
-├───pgadmin			# Конфигурация pgAdmin (для Docker образа)
-├───solutions
-│   └───GARReplication
-│           GARReplication.sln  # Решение утилиты репликации (.NET)
-└───src
-    ├───services		
-    │   └───GARReplication	# Основная логика репликации ГАР
-    │
-    └───shared
-        └───GarXmlParser	# Парсер ГАР из выгрузок ФНС (XML -> БД)
+	GarServices
+	├───data                        # Исходные xml выгрузки по умолчанию
+	├───db                          # Скрипты инициализации БД (PostgreSQL)
+	├───pgadmin	                    # Конфигурация pgAdmin (для Docker образа)
+	├───solutions
+	│   └───GARReplication
+	│           GARReplication.sln  # Решение утилиты репликации (.NET)
+	└───src
+	    ├───services
+	    │   └───GARReplication      # Основная логика репликации ГАР
+	    │
+	    └───shared
+        	└───GarXmlParser        # Парсер ГАР из выгрузок ФНС (XML -> БД)
 
 
 Состав docker образа:
@@ -166,22 +165,22 @@ GarServices
 
 Справка по аргументам:
 
-[command]--help, -h							Справка по команде
+	[command]--help, -h							Справка по команде
 
-start   									Запускает репликацию с настройками из по умолчанию
-	--strategy [StrategyName]				Задает стратегию репликации
-	--path, -p [PathString]					Путь к исходному ZIP архиву
-	--batch, -b [Numder]					Задает размер пачки для загрузки в базу данных
-	--region, -r [Num num num]				Задает перечень кодов регионов для репликации,
-											0 для репликации всех регионов
-	--conns, -cs [ConnectionString] 		Строка подключения к базе PostgreSQL
+	start   									Запускает репликацию с настройками из по умолчанию
+		--strategy [StrategyName]				Задает стратегию репликации
+		--path, -p [PathString]					Путь к исходному ZIP архиву
+		--batch, -b [Numder]					Задает размер пачки для загрузки в базу данных
+		--region, -r [Num num num]				Задает перечень кодов регионов для репликации,
+												0 для репликации всех регионов
+		--conns, -cs [ConnectionString] 		Строка подключения к базе PostgreSQL
 
-config
-	show									Показывает настройки по умолчанию
-	set 									Задает настройки по умолчанию (в appsettings.json)
-		--strategy [StrategyName]			Задает стратегию репликации
-		--path, -p [PathString]				Путь к исходному ZIP архиву
-		--batch, -b [Numder]				Задает размер пачки для загрузки в базу данных
-		--region, -r [Num num num]			Задает перечень кодов регионов для репликации,
-											0 для репликации всех регионов
-		--conns, -cs [ConnectionString] 	Строка подключения к базе PostgreSQL
+	config
+		show									Показывает настройки по умолчанию
+		set 									Задает настройки по умолчанию (в appsettings.json)
+			--strategy [StrategyName]			Задает стратегию репликации
+			--path, -p [PathString]				Путь к исходному ZIP архиву
+			--batch, -b [Numder]				Задает размер пачки для загрузки в базу данных
+			--region, -r [Num num num]			Задает перечень кодов регионов для репликации,
+												0 для репликации всех регионов
+			--conns, -cs [ConnectionString] 	Строка подключения к базе PostgreSQL
