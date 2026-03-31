@@ -94,19 +94,19 @@ BatchSize - размер пачки собираемой перед запись
 
 Структура проекта:
 
-GarServices
-├───data                        # Исходные xml выгрузки по умолчанию
-├───db                          # Скрипты инициализации БД (PostgreSQL)
-├───pgadmin	                    # Конфигурация pgAdmin (для Docker образа)
-├───solutions
-│   └───GARReplication
-│           GARReplication.sln  # Решение утилиты репликации (.NET)
-└───src
-    ├───services
-    │   └───GARReplication      # Основная логика репликации ГАР
-    │
-    └───shared
-        └───GarXmlParser        # Парсер ГАР из выгрузок ФНС (XML -> БД)
+	GarServices
+	├───data                        # Исходные xml выгрузки по умолчанию
+	├───db                          # Скрипты инициализации БД (PostgreSQL)
+	├───pgadmin	                    # Конфигурация pgAdmin (для Docker образа)
+	├───solutions
+	│   └───GARReplication
+	│           GARReplication.sln  # Решение утилиты репликации (.NET)
+	└───src
+	    ├───services
+	    │   └───GARReplication      # Основная логика репликации ГАР
+	    │
+	    └───shared
+        	└───GarXmlParser        # Парсер ГАР из выгрузок ФНС (XML -> БД)
 
 
 Состав docker образа:
