@@ -44,10 +44,10 @@
 	ReplicationSettings_Strategy=FullRepl
 	ReplicationSettings_BatchSize=1000000
 
-# /data из корня проекта в compose смонтирована как том поэтому архив можно положить в нее
-# Regions допускает null, в этом случае парсинг отработает по всем xml внутри архива
-# Strategy - пока две FullRepl - все сущности ГАР и WithoutCHRepl - все без таблицы ChangeHistory
-# BatchSize - размер пачки собираемой перед записью в базу данных одной транзакцией
+/data из корня проекта в compose смонтирована как том поэтому архив можно положить в нее
+Regions допускает null, в этом случае парсинг отработает по всем xml внутри архива
+Strategy - пока две FullRepl - все сущности ГАР и WithoutCHRepl - все без таблицы ChangeHistory
+BatchSize - размер пачки собираемой перед записью в базу данных одной транзакцией
 
 
 Быстрый старт с Docker:
